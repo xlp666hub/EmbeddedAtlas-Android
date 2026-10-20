@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="zh-CN"><head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="color-scheme" content="light dark"/>
+<title>Embedded Atlas · 嵌入式技术手册</title>
+<style>:root{color-scheme:light;--bg:#f4f6f9;--side:#fbfcfe;--paper:#ffffff;--ink:#1b2940;--muted:#6d7990;--faint:#9ba7ba;--line:#e4e9f1;--nav:#3b557f;--nav-strong:#233e6c;--soft:#eef3fa;--tag:#f5f7fb;--teal:#2e7766;--shadow:0 12px 40px rgba(23,40,72,.035);font-family:'Microsoft YaHei','PingFang SC','Segoe UI',Arial,sans-serif;font-size:14px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #8ca9dc;outline-offset:2px}button:disabled{opacity:.4;cursor:not-allowed}[hidden]{display:none!important}::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:#ccd5e1;border:2px solid transparent;border-radius:8px;background-clip:padding-box}
+.app-shell{min-height:100vh;display:flex}.sidebar{width:312px;flex:0 0 312px;background:var(--side);border-right:1px solid var(--line);height:100vh;position:sticky;top:0;display:flex;flex-direction:column;z-index:30}.brand{padding:25px 22px 25px;display:flex;align-items:center;gap:12px}.brand .logo{width:42px;height:42px;border-radius:12px;background:#2d476f;color:#fff;font-family:Georgia,serif;font-weight:800;font-size:27px;display:grid;place-items:center;position:relative}.brand .logo span{color:#a6d2bc}.brand strong{display:block;font-size:14px;letter-spacing:.1px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:3px}.side-top{padding:0 18px 12px}.side-heading{font-size:11px;color:var(--muted);font-weight:800;letter-spacing:1.2px;display:flex;align-items:center;justify-content:space-between}.plain{border:0;background:none;color:var(--nav);font-size:20px;border-radius:5px}.plain:hover{background:var(--soft)}.side-hint{font-size:11px;color:var(--faint);margin-top:7px}.tree{flex:1;overflow-y:auto;padding:0 9px 40px}.tree .module-row{display:flex;align-items:center;gap:3px;margin:3px 0}.module-main{flex:1;min-width:0;display:flex;align-items:center;gap:10px;text-align:left;border:0;background:none;padding:10px 9px;border-radius:9px;color:#3d4d66;font-weight:750;font-size:12.5px}.module-main:hover,.module-main.expanded{background:var(--soft);color:var(--nav-strong)}.mod-icon{background:#fff;border:1px solid var(--line);min-width:25px;height:25px;display:grid;place-items:center;border-radius:8px;font-size:11px;color:#45678e}.module-main .mod-title{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chev{font-size:10px;opacity:.8}.mini-add{border:0;background:transparent;padding:5px;color:var(--faint);opacity:0;font-weight:bold}.module-row:hover .mini-add,.group-row:hover .mini-add{opacity:1}.groups{padding:0 0 7px 17px;margin-left:21px;border-left:1px solid #e1e8f0}.group-row{display:flex;align-items:center;gap:1px;margin-top:7px}.group-trigger{border:0;background:none;color:#758398;text-align:left;font-size:11px;font-weight:760;letter-spacing:.2px;flex:1;padding:5px 5px 5px 10px;border-radius:5px}.group-trigger:hover{color:var(--nav);background:var(--soft)}.points{margin:2px 0 6px;padding:0}.point-link{font-size:11.7px;line-height:1.5;display:block;width:100%;text-align:left;border:0;border-radius:8px;padding:8px 10px 8px 13px;background:none;color:#67768e;position:relative}.point-link:hover{color:var(--nav-strong);background:var(--soft)}.point-link.active{background:#e9f0fa;color:#244779;font-weight:780}.point-link.active:before{content:'';background:#5275a9;width:3px;position:absolute;left:0;top:8px;bottom:8px;border-radius:5px}.tree-empty{font-size:12px;color:var(--muted);padding:20px;line-height:1.8}.side-footer{padding:18px 20px;margin:0 11px 14px;background:#f2f6f7;border:1px solid #e6ebef;border-radius:12px;display:flex;gap:10px;align-items:flex-start}.sparkle{font-size:19px;color:var(--teal)}.side-footer strong{display:block;font-size:11px}.side-footer small{display:block;font-size:10px;color:var(--muted);line-height:1.6;margin-top:5px}
+.workspace{flex:1;min-width:0}.topbar{height:72px;padding:0 32px;background:#fff;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}.top-crumb{font-size:11px;font-weight:650;color:#687a91;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.top-actions{display:flex;align-items:center;gap:8px}.search{height:37px;display:flex;align-items:center;gap:7px;border:1px solid #e8ecf3;background:#f3f5f9;border-radius:9px;color:#8492a7;padding:0 10px;min-width:280px}.search span{font-size:20px;line-height:1}.search input{background:none;outline:0;border:0;width:220px;color:var(--ink);font-size:11px}.search input::placeholder{color:#a2adbf}.search kbd{white-space:nowrap;border:1px solid #e1e6ef;padding:2px 4px;border-radius:4px;font-family:Consolas,monospace;font-size:9px}.tool-btn{background:#fff;border:1px solid var(--line);color:#4b5d79;font-size:11px;font-weight:750;border-radius:8px;padding:9px 12px;white-space:nowrap}.tool-btn:hover,.icon:hover{background:var(--soft)}.icon{border:0;background:transparent;color:#71819a;font-size:19px;min-width:34px;height:34px;border-radius:8px}.mobile-menu{display:none}
+.reader{max-width:1090px;margin:0 auto;padding:39px 42px 92px}.article{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.article-top{padding:43px 55px 30px;border-bottom:1px solid var(--line)}.overline{font-size:10px;color:var(--teal);font-weight:850;letter-spacing:1.7px;text-transform:uppercase}.path{font-size:11px;color:#8590a1;margin-top:13px}.article h1{font-size:31px;line-height:1.45;letter-spacing:-.6px;margin:17px 0 12px;font-weight:850}.dek{font-size:14px;line-height:1.95;color:#52657f;max-width:760px;margin:0}.article-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:25px}.article-tools button{border:1px solid var(--line);background:#fff;color:#4d637f;font-size:11px;padding:9px 12px;border-radius:8px;font-weight:690}.article-tools button:hover{background:var(--soft)}.article-tools button.primary{background:#2d4f80;color:#fff;border-color:#2d4f80}.article-tools button.primary:hover{background:#23446f}.article-nav{padding:15px 55px;display:flex;flex-wrap:wrap;gap:7px;border-bottom:1px solid var(--line);background:#fcfdff}.article-nav a{font-size:11px;color:#5c7493;text-decoration:none;padding:5px 8px;border-radius:6px}.article-nav a:hover{background:var(--soft)}.article-body{padding:16px 55px 55px}.note-section{padding:29px 0 30px;border-bottom:1px solid #ecf0f4;scroll-margin-top:95px}.note-section:last-child{border-bottom:0}.section-heading{display:flex;gap:10px;align-items:center;margin:0 0 19px;font-size:17px;font-weight:800;letter-spacing:-.1px}.section-no{font:700 11px Consolas,monospace;color:#6985b0;background:#eef3f9;border-radius:6px;display:grid;place-items:center;width:25px;height:25px}.prose{font-size:13px;line-height:2;color:#43536b;overflow-wrap:anywhere}.prose p{margin:0 0 14px}.prose p:last-child{margin:0}.prose strong{color:#1d3352;font-weight:800}.prose code,.quick-box code{font-family:Consolas,'Courier New',monospace;font-size:.9em;background:#edf2fa;color:#32517b;padding:2px 5px;border-radius:4px}.prose pre{border-radius:11px;background:#1a273a;color:#e0e8f1;padding:21px 23px;overflow:auto;line-height:1.85;font-size:12px;margin:0;white-space:pre}.prose pre code{color:inherit;background:none;padding:0}.prose ul{padding-left:21px}.prose li{margin-bottom:9px}.quick-box{background:linear-gradient(110deg,#f0f6f5,#f6f8fc);border:1px solid #dfebea;border-left:3px solid #588a81;border-radius:10px;padding:21px 24px;color:#365469;font-size:14px;line-height:1.9}.quick-box p{margin:0}.callout-code{white-space:pre-wrap;line-height:2.05;font-size:12.7px;color:#355b78;font-family:Consolas,'Microsoft YaHei',monospace;background:#f1f5fb;border:1px solid #e1eaf4;border-radius:10px;padding:18px 21px;margin:0;overflow-wrap:anywhere}.related{font-size:11px;color:#74879c;margin-top:9px}.empty{padding:70px 50px;text-align:center;color:var(--muted)}.empty h2{color:var(--ink)}.reader-loading{color:var(--muted)}.footer-nav{display:flex;gap:13px;margin-top:20px}.footer-link{flex:1;border:1px solid var(--line);background:var(--paper);padding:15px 18px;border-radius:10px;color:#4b6486;text-align:left;font-size:12px;font-weight:650;min-width:0}.footer-link:last-child{text-align:right}.footer-link:hover{border-color:#a8bcd9}.footer-link span{display:block;color:var(--faint);font-size:10px;margin-bottom:6px}
+.modal-layer{position:fixed;inset:0;background:rgba(15,26,43,.45);z-index:60;display:grid;place-items:center;padding:18px}.modal{width:min(780px,100%);background:var(--paper);border-radius:16px;max-height:94vh;overflow:auto;box-shadow:0 30px 80px #0f1a2f40}.modal-header{padding:20px 24px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}.modal h2{font-size:16px;margin:0}.fields{padding:22px 25px;display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{min-width:0;display:flex;flex-direction:column;gap:7px}.field.wide{grid-column:1/-1}.field label{font-size:11px;color:#61728c;font-weight:750}.field input,.field textarea,.field select{width:100%;border:1px solid #dfe6ee;border-radius:8px;background:#fff;color:var(--ink);padding:11px 12px;font-size:12px;line-height:1.6}.field textarea{resize:vertical;min-height:80px}.modal-note{font-size:11px;color:var(--muted);grid-column:1/-1}.modal-footer{padding:15px 25px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}.modal-footer .right{display:flex;gap:8px}.modal button{border:1px solid var(--line);background:var(--paper);border-radius:8px;padding:10px 13px;color:#50617b;font-size:11px;font-weight:700}.modal button.solid{background:#2c4e7b;color:white;border-color:#2c4e7b}.modal button.danger{color:#b05252}.toast{position:fixed;bottom:20px;right:20px;background:#253851;color:white;padding:12px 16px;border-radius:10px;box-shadow:0 14px 30px #18243b33;font-size:12px;z-index:90;opacity:0;transform:translateY(8px);transition:.18s;pointer-events:none}.toast.visible{opacity:1;transform:none}.overlay{position:fixed;inset:0;background:rgba(17,28,46,.35);z-index:25}
+body.dark{color-scheme:dark;--bg:#111922;--side:#17212c;--paper:#1c2936;--ink:#edf2f7;--muted:#9caec1;--faint:#73869d;--line:#30404e;--nav:#98bbdf;--nav-strong:#b3d0ec;--soft:#243749;--tag:#1c2b38;--teal:#86c6ac;--shadow:none}body.dark .topbar{background:#182430}body.dark .brand .logo{background:#4e6e9c}body.dark .module-main{color:#c3d0dc}body.dark .mod-icon{background:#223244}body.dark .module-main.expanded,body.dark .module-main:hover{color:#e7f0ff}body.dark .point-link{color:#a7bacb}body.dark .point-link.active{background:#263e59;color:#d7e9ff}body.dark .side-footer{background:#1f3439;border-color:#29474b}body.dark .search{background:#25313e;border-color:#30404e}body.dark .tool-btn,body.dark .article-tools button,body.dark .footer-link{background:#1c2936;color:#c3d4e9}body.dark .article-tools button.primary{background:#3d6394}body.dark .article-nav{background:#202d3a}body.dark .prose{color:#bdcbd9}body.dark .prose strong{color:#eff5ff}body.dark .prose code{background:#2b445c;color:#bddaff}body.dark .prose pre{background:#0d1721;color:#dbe6f2}body.dark .quick-box{background:#203836;border-color:#325853;color:#c2e5de}body.dark .callout-code{background:#20384e;border-color:#34526a;color:#d1e6fa}body.dark .field input,body.dark .field textarea,body.dark .field select{background:#172330;border-color:#30445c;color:#dfe8f4}
+@media(max-width:1200px){.sidebar{width:280px;flex-basis:280px}.reader{padding:32px 26px 65px}.article-top{padding:37px 37px 26px}.article-body{padding:12px 37px 35px}.article-nav{padding:12px 37px}.topbar{padding:0 22px}.search{min-width:220px}.search input{width:160px}}
+@media(max-width:980px){.sidebar{position:fixed;transform:translateX(-105%);transition:transform .22s ease;width:min(320px,90vw);flex-basis:auto;box-shadow:12px 0 30px #0a1a2a1c}.sidebar.open{transform:translateX(0)}.mobile-menu{display:block}.topbar{height:64px;padding:0 16px}.reader{max-width:100%;padding:26px 15px 60px}}
+@media(max-width:660px){.top-crumb{display:none}.search{flex:1;min-width:0;height:35px}.search input{width:100%;max-width:150px}.search kbd,.desktop-btn{display:none}.top-actions{flex:1}.reader{padding:13px 10px 50px}.article{border-radius:12px}.article-top{padding:27px 21px 24px}.article h1{font-size:23px;margin:13px 0}.dek{font-size:12px}.article-body{padding:5px 21px 24px}.article-nav{padding:10px 17px;gap:2px}.article-nav a{font-size:10px}.note-section{padding:25px 0}.section-heading{font-size:16px}.prose{font-size:12px}.quick-box{padding:16px}.callout-code{padding:14px;font-size:11px}.footer-nav{gap:7px}.footer-link{padding:13px 10px;font-size:11px}.fields{grid-template-columns:1fr;padding:16px}.field.wide{grid-column:auto}.modal-footer{padding:12px}.side-footer{margin-bottom:15px}}
+@media print{.sidebar,.topbar,.article-tools,.article-nav,.footer-nav{display:none!important}.workspace{width:100%}.reader{max-width:none;padding:0}.article{box-shadow:none;border:0}.article-top{padding:0 0 16px}.article-body{padding:0}.note-section{break-inside:avoid}.prose{font-size:12pt}}
+
+
+/* EMBEDDED ATLAS / THE ENGINEERING FIELDNOTES — offline editorial redesign.
+   Pure presentation layer, no external requests or fonts. */
+:root {
+  color-scheme: light;
+  --bg:#fbfcfd; --side:#101b2b; --paper:#ffffff;
+  --ink:#142137; --muted:#67758a; --faint:#96a3b4;
+  --line:#e8edf3; --nav:#4973cc; --nav-strong:#315fb7;
+  --soft:#f0f5ff; --tag:#f5f7fa; --teal:#128a72;
+  --shadow:none;
+  font-family:"Microsoft YaHei UI","Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
+  font-size:14px;
+}
+body {background:var(--bg);color:var(--ink)}
+.app-shell {min-height:100vh}
+.sidebar {width:282px;flex-basis:282px;background:var(--side);border-color:#263145;box-shadow:3px 0 24px #10223a0b}
+.brand {padding:34px 24px 34px;gap:12px;border-bottom:1px solid #ffffff0e}
+.brand .logo {width:39px;height:39px;border-radius:11px;background:#dce8f5;color:#1f3554;font:700 27px Georgia,serif;box-shadow:0 4px 18px #ffffff0c}
+.brand .logo span {color:#45856e}
+.brand strong {color:#fff;font-size:15px;letter-spacing:.1px;font-weight:730}
+.brand small {color:#8c9eb5;font-size:11px;margin-top:5px}
+.side-top {padding:29px 23px 20px}
+.side-heading {color:#d9e3f3;letter-spacing:1.25px;font-size:10px;font-weight:750}
+.side-hint {color:#6f829a;font-size:11px;letter-spacing:.25px;margin-top:10px}
+.plain {color:#89a9d6}.plain:hover {background:#273a55}
+.tree {padding:0 13px 30px;scrollbar-color:#3d5069 transparent}
+.tree .module-row {margin:3px 0}
+.module-main {color:#a7b7cc;padding:11px 12px;font-size:12.5px;gap:10px;border-radius:9px;transition:background .15s}
+.module-main:hover,.module-main.expanded {background:#1b2c43;color:#e7f1ff}
+.mod-icon {height:25px;min-width:25px;border-radius:7px;background:#24364e;border-color:#31445f;color:#b7cae4;font-size:10px}
+.chev {color:#839cbd;font-size:13px}
+.mini-add {color:#93abc5}.module-row:hover .mini-add,.group-row:hover .mini-add{opacity:1}
+.groups {margin-left:17px;padding:0 0 12px 10px;border-left:1px solid #314259}
+.group-row {margin-top:11px}
+.group-trigger {font-size:11px;font-weight:690;color:#8097b1;padding:7px 4px 7px 6px}
+.group-trigger:hover {background:#253750;color:#ddeafe}
+.point-link {font-size:11.8px;line-height:1.57;padding:9px 10px 9px 12px;color:#abbdd0;border-radius:6px;margin:2px 0}
+.point-link:hover {background:#1b2e48;color:#f5f8ff}
+.point-link.active {background:#274465;color:#fff;font-weight:750}
+.point-link.active:before {width:3px;left:-2px;top:5px;bottom:5px;background:#9abdf0}
+.side-footer {margin:0 19px 22px;padding:16px 3px;background:transparent;border:0;border-top:1px solid #2a3b50;border-radius:0}
+.side-footer .sparkle {font-size:11px;color:#65c2aa;margin-top:4px}
+.side-footer strong {font-size:11px;color:#dae7f5;font-weight:700}
+.side-footer small {font-size:10px;color:#8397ae;margin-top:3px}
+.tree-empty {color:#b8c6d8}
+.workspace {min-width:0;background:radial-gradient(ellipse 500px 400px at 60% 0%,#f4f8ff 0%,transparent 100%),#fbfcfd}
+.topbar {height:68px;background:#fffdfebf;backdrop-filter:blur(22px);border-color:#edf0f4;padding:0 39px}
+.top-crumb {display:flex;align-items:center;gap:12px;color:#738097;font-size:11.5px;letter-spacing:.1px}
+.crumb-logo {font-size:16px;color:#6785bf}
+.top-actions {gap:9px}
+.search {height:36px;background:#f5f7fa;min-width:255px;border:1px solid #edf0f4;border-radius:10px;padding:0 11px}
+.search input {font-size:11.5px;min-width:0;width:200px}
+.search kbd {color:#95a2b3}
+.tool-btn {border-radius:8px;color:#62738c;font-size:11px;padding:9px 13px}
+.tool-btn:hover,.icon:hover {background:#f2f6fb}
+.reader {max-width:1390px;margin:0 auto;display:grid;grid-template-columns:minmax(0,800px) 182px;justify-content:center;align-items:start;column-gap:55px;padding:46px 43px 95px}
+.reading-column {min-width:0}
+.article {background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
+.article-top {padding:0 0 41px;border-bottom:1px solid #dfe5ee;position:relative}
+.article-top:after {content:'';position:absolute;width:42px;height:2px;left:0;bottom:-1px;background:#718ccc}
+.article-meta {display:flex;align-items:center;gap:9px;color:#78889e;font-size:11.5px;margin-bottom:29px}
+.category-label {display:inline-flex;border-radius:6px;background:#e9f2ff;color:#3764aa;padding:6px 10px;font-weight:730}
+.meta-arrow {color:#b0bfd3;font-size:18px;line-height:1}
+.overline {display:flex;align-items:center;gap:10px;color:#7586a1;letter-spacing:2px;font-size:10px;font-weight:750;margin-bottom:12px}
+.overline-line {display:inline-block;width:22px;height:1px;background:#a8b7c8}
+.article h1 {font-size:35px;letter-spacing:-1.1px;line-height:1.5;font-weight:800;color:#101c2c;margin:0 0 15px}
+.dek {max-width:670px;color:#647187;font-size:14px;line-height:2;margin:0}
+.article-tools {margin-top:27px;gap:8px}
+.article-tools button {border-color:#e4eaf2;color:#566981;background:#fff;border-radius:8px;font-size:11px;padding:10px 13px;font-weight:640}
+.article-tools button.primary {background:#1c3658;border-color:#1c3658;color:#fff;box-shadow:0 5px 14px #193f7520}
+.article-tools button.primary:hover {background:#2c4b73}
+.article-body {padding:6px 0 0}
+.note-section {padding:35px 0 34px;border-bottom:1px solid #edf0f5;scroll-margin-top:95px}
+.note-section:last-child {border:0}
+.section-heading {gap:16px;font-size:19px;font-weight:770;letter-spacing:-.3px;color:#17273d;margin:0 0 22px}
+.section-no {background:transparent;border-radius:0;width:29px;height:auto;font-family:Consolas,'Courier New',monospace;font-size:11px;font-weight:600;letter-spacing:.1px;color:#9aabc0;position:relative}
+.section-no:after {content:'';display:block;position:absolute;right:0;top:50%;height:1px;width:6px;background:#b6c5d5}
+.prose {font-size:14px;line-height:2.05;color:#44566d;letter-spacing:.05px;overflow-wrap:break-word}
+.prose p {margin:0 0 17px}
+.prose strong {color:#172b46;font-weight:740}
+.prose code,.quick-box code {border:1px solid #ebeff5;background:#f3f6fa;color:#b13f52;font-family:Consolas,'Courier New',monospace;font-size:.88em;border-radius:4px;padding:2px 5px}
+.prose pre {background:#172333;border:1px solid #27384a;color:#dae6f3;border-radius:13px;padding:24px 25px;font-size:12.4px;line-height:1.95;box-shadow:0 14px 24px #172a4512}
+.prose pre code {border:0;background:transparent;color:inherit}
+.quick-box {background:linear-gradient(110deg,#edf7f5 0%,#f3f9f7 90%);border:1px solid #d9ede7;border-left:3px solid #3b9a82;border-radius:10px;padding:24px 26px;display:flex;align-items:flex-start;gap:15px;font-size:14px;color:#27584f;line-height:2}
+.quick-ornament {font-size:20px;line-height:1.4;color:#31947d}
+.quick-box div {flex:1}
+.callout-code {background:#162639;color:#d4e6f2;border:1px solid #2d4359;border-radius:12px;padding:26px 28px;font-size:13.4px;line-height:2.35;font-family:Consolas,'Microsoft YaHei',monospace;box-shadow:0 12px 28px #10284315}
+.related {padding:20px;border-radius:8px;background:#f3f7fc;border:1px solid #e6edf5;color:#71829a;font-size:11px}
+.page-toc {position:sticky;top:113px;margin-top:187px;align-self:start;min-width:0}
+.toc-inner {border-left:1px solid #e7ecf3;padding-left:18px}
+.toc-head {font-size:10px;font-weight:780;letter-spacing:1.3px;color:#6f8098;display:flex;justify-content:space-between;align-items:center;padding-bottom:14px}
+.toc-head span {font-size:17px;color:#9fafc1}
+.toc-items {display:flex;flex-direction:column;gap:3px}
+.toc-entry {font-size:11.5px;line-height:1.7;display:flex;align-items:center;gap:9px;text-decoration:none;color:#8c98aa;padding:8px 0;transition:color .14s}
+.toc-entry:hover {color:#345ca0}
+.toc-entry.active {font-weight:750;color:#274f89}
+.toc-marker {flex:0 0 4px;height:4px;background:#cad4e0;border-radius:50%}
+.toc-entry.active .toc-marker {background:#517bbe}
+.toc-shortcut {margin-top:23px;padding-top:17px;border-top:1px solid #e6ebf1;color:#9aa8b8;font-size:10px;display:flex;align-items:center;justify-content:space-between}
+.back-top {text-decoration:none;font-size:16px;color:#6e8ab4}
+.footer-nav {margin-top:30px;gap:12px}
+.footer-link {background:#fff;border:1px solid #e6ecf2;color:#263d5c;font-size:12px;padding:18px 19px;border-radius:11px;min-height:82px}
+.footer-link:hover {border-color:#afc2e3;background:#fcfdff}
+.footer-link span {color:#96a5b8;font-size:10px;margin-bottom:10px}
+.article-signoff {padding:31px 0 0;display:flex;justify-content:space-between;color:#b1beca;letter-spacing:1.1px;font-size:9px}
+/* Keep forms fully functional and readable. */
+.modal {box-shadow:0 28px 90px #0b172b44}
+.modal h2 {font-size:18px}
+.modal .field label {font-size:12px}
+.field textarea {font-size:13px}
+body.dark {--bg:#0b111c;--side:#0d1624;--paper:#152234;--ink:#ebf2ff;--muted:#9dafc8;--faint:#71849a;--line:#29384d;--nav:#aac8f5;--nav-strong:#c9dfff;--soft:#213350;--teal:#8ad4bd;background:#0c1523}
+body.dark .workspace {background:#111b2a}
+body.dark .topbar {background:#142033ee;border-color:#2b3a4d}
+body.dark .top-crumb {color:#a9b9ce}
+body.dark .article-meta {color:#a2b1c6}
+body.dark .category-label {background:#253c56;color:#a7ceef}
+body.dark .overline,.dark .toc-head {color:#8ca6c1}
+body.dark .article h1 {color:#f0f6ff}
+body.dark .dek {color:#afc0d2}
+body.dark .article-top {border-color:#334358}
+body.dark .section-heading {color:#e7eef9}
+body.dark .note-section {border-color:#2b3b50}
+body.dark .prose {color:#bdcbdc}
+body.dark .prose strong {color:#fff}
+body.dark .quick-box {background:#1a3936;border-color:#295a4d;color:#c4e8dd}
+body.dark .callout-code {background:#0d1a28;color:#dbeaf3}
+body.dark .toc-entry {color:#8ca4c1}
+body.dark .toc-entry.active {color:#d4e5ff}
+body.dark .toc-inner {border-color:#2d4258}
+body.dark .footer-link {background:#182536;border-color:#30415a;color:#d7e8ff}
+body.dark .article-tools button {background:#192a40;border-color:#34465b;color:#d1e0f3}
+body.dark .article-tools button.primary {background:#315780;border-color:#315780}
+body.dark .search {background:#202c3d;border-color:#314052}
+body.dark .side-footer {background:none;border-color:#2b3c51}
+body.dark .related {background:#1c2c40;color:#b5c5d9;border-color:#34445a}
+@media(max-width:1280px){.sidebar{width:254px;flex-basis:254px}.reader{grid-template-columns:minmax(0,760px) 155px;column-gap:28px;padding:40px 26px 85px}.topbar{padding:0 28px}.article h1{font-size:32px}}
+@media(max-width:1100px){.page-toc{display:none}.reader{display:block;max-width:820px;margin:0 auto;padding:40px 38px 85px}}
+@media(max-width:980px){.sidebar{width:min(310px,90vw);flex-basis:auto}.reader{padding:35px 35px 70px}.topbar{padding:0 23px}.sidebar.open{box-shadow:20px 0 90px #111b2860}}
+@media(max-width:660px){.topbar{padding:0 13px;height:59px}.search{min-width:0}.reader{padding:28px 22px 60px}.article-meta{margin-bottom:28px}.overline{font-size:9px}.article h1{font-size:27px;letter-spacing:-.5px}.dek{font-size:13px;line-height:1.85}.article-top{padding-bottom:30px}.article-tools{gap:7px}.article-tools button{padding:9px 10px;font-size:10.5px}.note-section{padding:28px 0 27px}.section-heading{font-size:17px;gap:10px;margin-bottom:19px}.quick-box{padding:17px 17px;font-size:13px;gap:9px}.quick-ornament{font-size:16px}.prose{font-size:13px;line-height:2}.callout-code{font-size:11.7px;padding:17px 15px}.article-signoff{font-size:8px}.footer-link{padding:14px 12px;min-height:78px}}
+@media print {.sidebar,.topbar,.page-toc,.article-tools,.footer-nav,.article-signoff{display:none!important}.reader{display:block;padding:0;max-width:none}.article h1{font-size:27pt}.article-body{padding:0}.quick-box,.callout-code{break-inside:avoid}}
+
+body.dark .toc-entry.active {color:#b7d4ff}
+body.dark .toc-entry.active .toc-marker {background:#85b8ff}
+body.dark .toc-shortcut {border-color:#304158}
+
+/* Refined navigation and modular content editing */
+.side-top {padding-top:23px;padding-bottom:10px}
+.side-heading {font-size:10px;letter-spacing:.09em}
+.groups {border-left:1px solid #33445b;margin-left:27px;padding-left:12px}
+.module-row,.group-row {position:relative}
+.module-main {padding:10px 10px;gap:10px}
+.module-main .mod-title {font-weight:680}
+.group-trigger {display:flex;align-items:center;gap:10px;color:#9aabc0;font-size:11.5px;min-height:31px;line-height:1.5;padding:6px 8px;font-weight:630;border-radius:7px}
+.group-trigger .group-name {overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.chev-icon {height:15px;width:15px;flex:0 0 15px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round;color:#94a9c4;opacity:.83;transition:transform .2s ease,color .2s ease}
+.chev-icon.expanded {transform:rotate(90deg);color:#ccddf0}
+.group-trigger .chev-icon {width:12px;height:12px;flex:0 0 12px;color:#8297b0}
+.module-main:hover .chev-icon,.group-trigger:hover .chev-icon {color:#e1edfb}
+.tree-more {flex:0 0 24px;width:24px;height:26px;display:grid;place-items:center;background:transparent;border:0;border-radius:7px;color:#71849e;padding:0;transition:background .15s,color .15s}
+.tree-more svg {width:15px;height:15px;stroke:currentColor;stroke-width:2;fill:currentColor}
+.tree-more:hover,.tree-more:focus-visible {background:#2b415b;color:#f1f6ff}
+.tree-more:focus-visible {opacity:1}
+.module-row:hover .tree-more,.group-row:hover .tree-more {color:#b2c9e6}
+.group-row {gap:0;margin-top:6px}
+.group-trigger {min-width:0}
+.group-row .tree-more {width:22px;flex-basis:22px}
+.context-menu {position:fixed;z-index:95;min-width:164px;background:#fff;border:1px solid #e6ebf1;box-shadow:0 14px 38px #13253e24;border-radius:11px;padding:6px;display:grid;gap:2px}
+.context-menu[hidden]{display:none}
+.context-menu button {font-size:12px;color:#344760;text-align:left;width:100%;border:none;background:transparent;border-radius:7px;padding:10px 11px;line-height:1.3}
+.context-menu button:hover {background:#eff4fb;color:#234b82}
+.context-menu .context-divider{margin:3px 7px;border-top:1px solid #e9edf3}
+.article-top{padding-bottom:28px}
+.article h1 {margin:5px 0 18px}
+.article-tools{margin-top:19px}
+.article-body {padding-top:10px}
+.note-section {padding:31px 0 29px}
+.note-section.empty-block {padding-bottom:17px}
+.section-heading {margin-bottom:17px}
+.article-tools button{font-size:11.5px}
+.page-toc{margin-top:120px}
+.toc-inner{padding-left:15px}
+.editor-intro{color:#77869a;font-size:11.5px;margin:0}
+.block-editor{margin:0 24px 12px;display:flex;flex-direction:column;gap:10px}
+.block-editor-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 24px 14px;padding-top:16px;border-top:1px solid var(--line)}
+.block-editor-bar h3 {font-size:13px;margin:0;color:var(--ink)}
+.block-add-btn {border:1px solid #d5e1ef;background:#f3f7fc;color:#2c568b;border-radius:8px;padding:9px 13px;font-size:12px;font-weight:720;white-space:nowrap}
+.block-add-btn:hover {background:#e5effc}
+.editor-block {border:1px solid #e4eaf1;background:#fff;border-radius:11px;overflow:hidden}
+.editor-block-head{display:flex;align-items:center;gap:8px;padding:11px 12px}
+.editor-index{font:700 11px Consolas,monospace;color:#8497ad;min-width:22px}
+.editor-title{flex:1;min-width:110px;border:1px solid transparent;border-radius:6px;padding:8px 9px;background:#f5f7fa;color:#273c59;font-size:12.5px;font-weight:720}
+.editor-kind{border:1px solid #e5eaf1;padding:7px 6px;border-radius:6px;font-size:11px;background:#fff;color:#52657d;max-width:105px}
+.block-action{border:0;background:transparent;color:#7386a0;min-width:28px;height:29px;border-radius:6px;font-size:14px;display:grid;place-items:center}
+.block-action:hover{background:#eef3fa;color:#244b7c}
+.block-action.danger:hover{background:#fff0f0;color:#b33b49}
+.block-action:disabled{opacity:.25}
+.editor-body{padding:0 13px 13px}
+.editor-body[hidden]{display:none}
+.editor-body textarea{display:block;width:100%;min-height:142px;resize:vertical;font-size:12.5px;line-height:1.75;padding:13px 14px;border:1px solid #e0e8f1;border-radius:8px;color:#2e425d;background:#fff}
+.article-edit-modal{width:min(925px,100%)}
+.article-edit-modal .fields{padding-bottom:12px}
+.article-edit-modal .modal-footer{position:sticky;bottom:0;background:var(--paper);z-index:3;border-top:1px solid var(--line)}
+.article-edit-modal .section-create-hint{font-size:11px;color:#91a0b3}
+body.dark .context-menu{background:#1b2a3b;border-color:#35475c;box-shadow:0 15px 40px #060d18a0}
+body.dark .context-menu button{color:#d1dfef}
+body.dark .context-menu button:hover{background:#2c415a}
+body.dark .context-menu .context-divider{border-color:#35475c}
+body.dark .editor-block{background:#1b2a3a;border-color:#35475b}
+body.dark .editor-title,body.dark .editor-kind,body.dark .editor-body textarea{background:#172535;color:#e3edf9;border-color:#34485f}
+body.dark .block-add-btn{background:#223a55;border-color:#35516f;color:#d0e2f7}
+body.dark .block-action:hover{background:#2d4058}
+@media(max-width:660px){.editor-block-head{flex-wrap:wrap}.editor-title{min-width:calc(100% - 45px)}.editor-kind{max-width:130px}.block-editor{margin:0 14px 8px}.block-editor-bar{margin:5px 14px 12px}}
+
+</style>
+</head><body>
+<div class="app-shell">
+ <aside id="sidebar" class="sidebar" aria-label="全部知识目录">
+  <div class="brand"><span class="logo">E<span>·</span></span><div><strong>Embedded Atlas</strong><small>嵌入式技术手册</small></div></div>
+  <div class="side-top"><div class="side-heading">KNOWLEDGE LIBRARY <button class="plain add-root" data-action="add-module" title="新增大模块">＋</button></div></div>
+  <nav id="tree" class="tree"></nav>
+  
+ </aside>
+ <div id="overlay" class="overlay" data-action="menu-close" hidden></div>
+ <div class="workspace">
+  <header class="topbar"><button class="icon mobile-menu" data-action="toggle-menu" aria-label="显示目录">☰</button>
+   <div class="top-crumb"><span class="crumb-logo">⌘</span><span id="topCrumb">技术手册 / C 语言</span></div>
+   <div class="top-actions"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索知识点、函数、关键词…" autocomplete="off"/><kbd>Ctrl K</kbd></label>
+    <button class="tool-btn desktop-btn" data-action="add-point">＋ 知识点</button>
+    <button class="tool-btn desktop-btn" data-action="import">导入</button>
+    <button class="tool-btn desktop-btn" data-action="export">备份</button>
+    <button class="icon" data-action="theme" title="切换主题">☼</button>
+   </div></header>
+  <main id="reader" class="reader"></main>
+ </div>
+</div>
+<input id="fileIn" type="file" accept=".json,application/json" hidden/>
+<div class="modal-layer" id="modalLayer" hidden></div>
+<div id="toast" class="toast" aria-live="polite"></div>
+<div id="contextMenu" class="context-menu" hidden></div>
+<script>window.ATLAS_SEED={"schemaVersion":2,"title":"Embedded Atlas","subtitle":"嵌入式技术手册","modules":[{"id":"c","title":"C 语言","subtitle":"内存 · 指针 · 数据结构","icon":"C","groups":[{"id":"c-memory","title":"内存与存储期","points":[{"id":"c-memory-layout","title":"栈、堆、.data、.bss 与生命周期","summary":"区分变量本体所在区域、指针指向的对象所在区域，以及对象的生命周期。","callchain":"源代码声明 → 编译/链接分配段 → 进程装载 → 执行期分配与释放","pitfalls":"不要认为指针变量在堆上；malloc 返回的只是堆内存地址。","experiment":"编写含全局已初始化、全局未初始化、static 局部、malloc 和栈变量的小程序；用 readelf -S、nm、/proc/<pid>/maps 观察。","project":"C 源码阅读","explanation":"**先分清三个问题：变量本身在哪、变量指向的对象在哪、何时失效。** 局部普通变量通常位于当前函数的栈帧；全局/静态变量具有静态存储期，已初始化可写数据通常在 `.data`，零初始化数据通常在 `.bss`。`malloc` 获得的是动态存储期对象，指针本身可能是局部变量，因此指针和目标对象不是同一个东西。\n\n`.bss` 在 ELF 文件中通常不占等量的文件数据空间，装载时由系统准备零初始化内存。静态存储期对象一般持续到进程结束；自动存储期局部变量通常在离开作用域/函数返回时结束生命期；堆对象由 `free` 释放，不会随函数返回自动释放。\n\n**要区分“段”和实际虚拟内存映射。** 链接器安排 ELF 段/节，装载器与内核创建地址空间映射；堆可能由 `brk` 或 `mmap` 提供，不能简单等同于一段固定地址。","snippet":"```c\nint g;                 // 静态存储期，通常位于 .bss\nstatic int s = 42;     // 静态存储期，通常位于 .data\nvoid demo(void) {\n    int x = 1;         // 自动存储期（常在栈上）\n    int *p = malloc(sizeof *p); // p 本身在当前栈帧，*p 在动态分配区\n    if (p) { *p = 9; free(p); }\n}\n```\n`readelf -S a.out` 查看 ELF 节；`nm -S a.out` 观察符号。","personal":""},{"id":"c-pointer","title":"指针、数组、指针算术与二级指针","summary":"理解指针运算以元素类型为步长，数组名在多数表达式中退化为首元素指针。","callchain":"","pitfalls":"数组不是指针；&arr 的类型不同于 arr。","experiment":"打印 arr、&arr、arr+1、&arr+1 的地址差异；实现通过二级指针返回动态对象。","project":"","explanation":"数组对象、数组表达式和指针变量是三件不同的事。大多数表达式场景下数组名会转换为首元素指针，但 `sizeof(array)`、`&array` 等例外。`p + 1` 的实际地址增量是 `sizeof(*p)`，不是固定一个字节。\n\n二级指针 `T **` 的用途通常是让函数修改调用者的 `T *`，或者表达指针数组的元素引用。传 `T *` 给函数只能通过它修改目标对象；若要修改调用者的指针值，需要 `T **` 或返回新指针。\n\n对内存访问必须同时考虑**有效对象、边界、对齐和生命周期**。越界指针运算、解引用悬空指针都会触发未定义行为；编译通过并不等于运行安全。","snippet":"```c\nint a[4] = {1,2,3,4};\nint *p = a;            // 数组表达式转换为 &a[0]\nsize_t n = sizeof(a); // 整个数组字节数，不是指针大小\np += 1;               // 前进 sizeof(int) 字节\n```","personal":""},{"id":"c-memcopy","title":"memcpy、memmove 与二进制缓冲区","summary":"二进制数据不以 0x00 结尾；拷贝必须显式指定长度，重叠区使用 memmove。","callchain":"","pitfalls":"不要把二进制缓冲区误当成 C 字符串。","experiment":"构造含 0x00 的 100 字节协议数据并验证拷贝结果；对重叠缓冲区实验。","project":"STM32 UART 协议","explanation":"`memcpy(dst, src, n)` 按字节复制 **n 字节**，不关心 `0x00`，因此适合二进制协议帧、结构化缓冲区。`strlen()` 只适用于以 `\\0` 结束的 C 字符串，不能判断二进制有效负载长度。\n\n`memcpy` 要求源和目标内存区域**不重叠**；重叠则行为未定义。`memmove` 允许重叠，语义相当于先复制到一个临时不重叠区域再写回，但实现不一定真的分配临时缓冲区。\n\n网络收包常见的两个长度：`capacity` 是缓冲区容量，`length` 是实际接收数据长度。后续解析和拷贝必须基于 `length` 做边界检查。","snippet":"```c\nuint8_t packet[8] = {0xA5, 0x00, 0x04, 0x01};\nuint8_t out[8];\nmemcpy(out, packet, sizeof packet); // 0x00 不会截断\nmemmove(out + 1, out, 7);           // 区域重叠时使用\n```","personal":""}]},{"id":"c-data","title":"数据结构与接口","points":[{"id":"c-ring","title":"环形缓冲区的读写边界","summary":"用读写索引管理循环存储，明确满/空条件、溢出策略与并发访问。","callchain":"UART 中断接收 → 写入环形缓冲区 → 消费线程读取 → 帧解析","pitfalls":"索引与元素个数要有统一语义；不要默认 volatile 就能解决线程同步。","experiment":"实现单生产者单消费者环形缓冲区，测试索引回绕、边界与丢包。","project":"双轴云台 UART","explanation":"环形缓冲区用读指针 `head` 和写指针 `tail` 复用固定数组。常用“**空出一个槽位**”方案：`head == tail` 表示空；`(tail+1)%N == head` 表示满，最大可用容量是 `N-1`。也可以单独维护 `count` 或状态位，但必须统一含义。\n\n单生产者单消费者（SPSC）设计可避免大范围加锁，但**是否无锁安全取决于内存模型和索引原子性**。跨核线程间通信应使用相应原子与内存序，`volatile` 只影响部分编译器优化，不是线程同步原语。\n\n写入速度超过读取速度时，需要明确“丢新数据、覆盖旧数据、阻塞等待”之一；对于 UART 协议帧，还要设计错帧后如何重新寻找帧头。","snippet":"```c\n#define N 128\nsize_t next(size_t i) { return (i + 1) % N; }\nbool empty(void) { return head == tail; }\nbool full(void) { return next(tail) == head; }\n// 对跨线程/跨核并发还需正确的同步和内存序\n```","personal":""},{"id":"c-struct","title":"struct、对齐与协议打包","summary":"结构体内存布局受对齐和 ABI 影响，通信数据要明确字节序和序列化方案。","callchain":"","pitfalls":"编译器打包属性无法替代显式字节序约定。","experiment":"使用 offsetof/sizeof 观察字段偏移，并手动序列化一帧带 CRC 的消息。","project":"","explanation":"结构体成员布局由 ABI、对齐要求和编译器共同决定。`sizeof(struct)` 可能包含成员之间以及末尾的 padding，因此不能默认将结构体内存直接当成线上的二进制协议。\n\n`#pragma pack` 或 `__attribute__((packed))` 可改变布局，但可能带来非对齐访问成本甚至访问异常；跨 MCU/Linux 协议更建议明确指定字段宽度、字节序并手动序列化。\n\n区分**主机字节序**与**协议字节序**，CRC 的计算覆盖范围必须双方一致，包括是否包含帧头、长度字段。","snippet":"```c\nstruct Msg { uint8_t type; uint32_t value; };\n// sizeof(struct Msg) 不一定为 5\n// 更可靠：显式把 value 拆成 4 个按协议字节序写出的字节\n```","personal":""}]},{"id":"c-build","title":"编译与工程","points":[{"id":"c-make","title":"编译、链接、Makefile 与静态库","summary":"理解预处理、编译、汇编、链接的边界，以及头文件/目标文件/库的关系。","callchain":".c/.h → gcc -E/-S/-c → .o → 链接器 → ELF 可执行文件","pitfalls":"声明与定义不同；链接顺序在部分静态库场景有影响。","experiment":"写多文件项目生成静态库，使用 nm/readelf 检查符号。","project":"","explanation":"C 工程构建通常分四步：预处理展开宏/头文件 → 编译生成汇编 → 汇编为 `.o` → 链接合并符号与重定位生成 ELF。`.h` 主要放声明；`.c` 提供定义，否则可能在多个目标文件中造成重复定义。\n\n`undefined reference` 属于**链接期**问题，通常是实现未参与链接、符号名不符或静态库链接顺序错误；语法错误和类型错误一般在编译期发现。\n\nMakefile 的核心是目标、依赖、命令。修改头文件要让依赖它的 `.o` 重新编译。交叉编译还要保证工具链、sysroot、架构 ABI 一致。","snippet":"```sh\ngcc -E demo.c -o demo.i\ngcc -S demo.c -o demo.s\ngcc -c demo.c -o demo.o\nnm demo.o\nreadelf -h demo.o\n```","personal":""}]}]},{"id":"linux-app","title":"Linux 应用","subtitle":"系统调用 · 进程 · 通信","icon":"L","groups":[{"id":"app-io","title":"文件与设备 I/O","points":[{"id":"app-fd","title":"文件描述符、open/read/write 与 VFS","summary":"fd 是进程级索引；文件对象关联操作集合，VFS 统一文件与设备的访问方式。","callchain":"用户 read(fd) → 系统调用入口 → VFS → file->f_op->read_iter/驱动适配 → 返回用户态","pitfalls":"不要把 fd 当作内核指针；文件位置和描述符是不同概念。","experiment":"strace 观察 open/read/write/close；配合 /proc/<pid>/fd 查 fd。","project":"Linux 字符设备","explanation":"文件描述符 `fd` 是**每个进程的整数索引**，由它找到内核中打开文件对象（open file description / `struct file`）；`struct file` 再关联 `f_op`，由文件系统或设备驱动提供操作实现。不同 fd 可以通过 `dup` 共享同一个打开文件对象及其文件偏移。\n\n`open()` 不等于“读数据”：它解析路径、检查权限、创建/获取打开文件对象并调用可能存在的 `.open`。`read()` 通过 VFS 分发到相应操作，返回读取字节数、0（一般表示 EOF）或负错误码（经 libc 转换为 `-1` 并设置 `errno`）。\n\n具体 Linux 内核版本的 VFS 内部函数可能变化，**稳定的主线**是：系统调用 → fd 解析 → `struct file` → `f_op` → 文件系统/驱动 → 用户空间。","snippet":"```c\nint fd = open(\"/dev/gimbal0\", O_RDWR);\nif (fd < 0) perror(\"open\");\nssize_t n = read(fd, buffer, sizeof buffer);\nif (n < 0) perror(\"read\");\nclose(fd);\n```","personal":""},{"id":"app-poll","title":"阻塞 I/O、非阻塞与 poll/select","summary":"区别数据是否可用与系统调用是否等待，理解等待队列唤醒通知。","callchain":"用户 poll → VFS/驱动 poll 回调 → poll_wait 注册等待 → 事件触发 wake_up → 返回可读标志","pitfalls":"poll 就绪不等于随后 read 永远不会阻塞（并发竞争）。","experiment":"管道或字符设备做阻塞/非阻塞读取、poll 超时测试。","project":"","explanation":"阻塞 I/O 是暂时没有数据时等待条件满足；非阻塞 I/O 在无法立即完成时常返回 `-EAGAIN`/`EWOULDBLOCK`。`O_NONBLOCK` 影响单个 open file description 的文件状态标志，而不是“让程序永远不睡眠”。\n\n`poll/select` 的目的是**一次等待多个 fd 的就绪事件**。内核调用文件对应的 `poll` 回调，驱动使用 `poll_wait()` 将当前等待者关联到 wait queue，并根据当前缓冲区状态返回 `POLLIN` / `POLLOUT` 等掩码。\n\n`poll_wait()` 自身不是睡眠函数；是否进入休眠由上层轮询逻辑决定。事件到来后驱动调用 `wake_up_interruptible()` 等唤醒等待者。","snippet":"```c\nstruct pollfd pfd = {.fd = fd, .events = POLLIN};\nint ret = poll(&pfd, 1, 1000);\nif (ret > 0 && (pfd.revents & POLLIN)) { /* read */ }\n```","personal":""}]},{"id":"app-process","title":"进程、线程与同步","points":[{"id":"app-fork","title":"fork/exec/wait 与进程生命周期","summary":"fork 创建子进程上下文，exec 替换进程映像，wait 回收子进程退出状态。","callchain":"fork → 子进程执行 execve → 内核加载 ELF → exit → 父进程 waitpid 回收","pitfalls":"fork 后执行路径是两条；exec 成功后不会返回原代码。","experiment":"创建 fork/exec/wait 示例，故意暂不 wait 观察状态。","project":"","explanation":"`fork()` 创建一个子进程，其虚拟地址空间逻辑上继承父进程，现代实现通常通过写时复制（COW）延迟复制物理页。父子进程在 fork 后沿两个返回值分支执行。\n\n`execve()` **替换当前进程映像**，正常成功不返回旧程序代码；PID 通常不变。子进程退出时，内核保留退出状态，父进程通过 `wait/waitpid` 回收；不回收会出现僵尸进程。\n\n重点区分：`fork` 新建进程、`exec` 加载新程序、`wait` 回收退出状态。","snippet":"```c\npid_t pid = fork();\nif (pid == 0) { execlp(\"ls\", \"ls\", NULL); _exit(127); }\nif (pid > 0) { int st; waitpid(pid, &st, 0); }\n```","personal":""},{"id":"app-pthread","title":"pthread、互斥锁与条件变量","summary":"线程共享进程地址空间，不同同步机制解决互斥和事件等待问题。","callchain":"","pitfalls":"volatile 不是线程安全；条件变量可能出现虚假唤醒。","experiment":"实现有界生产者消费者队列，模拟竞争与唤醒。","project":"","explanation":"同一进程的线程共享地址空间、全局对象、打开文件描述符表等资源，但有独立栈和执行上下文。共享变量的并发访问可能造成数据竞争；`volatile` 不能替代 mutex/atomic。\n\n互斥锁用于保护共享状态的一致性；条件变量用于**等待条件成立**，必须配合互斥锁并在循环中检查谓词，以应对虚假唤醒和通知早于等待的情况。\n\n死锁的典型原因是互斥锁获取顺序不一致；规范锁顺序、缩短持锁时间、避免在持锁区执行长时间阻塞 I/O。","snippet":"```c\npthread_mutex_lock(&mu);\nwhile (!ready) pthread_cond_wait(&cv, &mu);\nconsume_shared_data();\npthread_mutex_unlock(&mu);\n```","personal":""}]},{"id":"app-comms","title":"网络与串口","points":[{"id":"app-socket","title":"TCP/UDP、socket 与网络调试","summary":"掌握 socket 建连、收发、关闭过程与 TCP 字节流边界。","callchain":"socket → bind/listen/accept 或 connect → send/recv → close","pitfalls":"一次 recv 不保证读到完整业务消息。","experiment":"写 TCP echo server/client，使用 ss、tcpdump 抓包对照。","project":"","explanation":"TCP 是可靠、有序的**字节流**，不保留应用层消息边界；一次 `send` 不保证一次 `recv` 正好收到完整帧。应用层必须有长度前缀、固定帧长或分隔符协议，并处理半包、粘连、断连和重连。\n\nTCP 服务器通常：`socket → bind → listen → accept → recv/send`；客户端通常：`socket → connect → send/recv`。UDP 以数据报为边界，但可能丢失、乱序、重复。\n\n排错按层次来：链路/IP 可达性 → 端口监听 → 三次握手/连接状态 → 应用帧协议 → 超时与缓冲区。","snippet":"```text\n应用协议： [固定帧头][长度][payload][CRC]\nTCP recv 一次收到 3 字节 ≠ 帧长就是 3 字节\n必须维护缓冲区，按长度反复累积、解析。\n```","personal":""},{"id":"app-tty","title":"UART/TTY 与 termios","summary":"Linux 通过 TTY 子系统暴露串口设备，应用端需约定波特率、数据位、停止位与流控。","callchain":"应用 open(/dev/ttySx) → TTY 层 → UART 驱动 → 控制器寄存器","pitfalls":"串口字节流没有天然帧边界。","experiment":"连接 USB 转串口，配置 termios，循环发送 CRC 帧并核验。","project":"RK3568 / STM32","explanation":"Linux 串口用户态一般通过 `/dev/ttyS*` / `/dev/ttyUSB*` 等 TTY 设备与串口驱动通信。`termios` 配置波特率、数据位、校验位、停止位、原始模式和读超时。\n\n使用二进制协议时要关闭规范模式、回显、信号字符等文本终端处理，避免字节被转换或缓存。`VMIN/VTIME` 与 `O_NONBLOCK` 会共同影响读行为，必须理解所选配置的语义。\n\nUART 提供字节流而非消息边界，所以还需要**帧头 + 长度 + CRC + 超时重同步**等应用层机制。","snippet":"```c\nstruct termios tio;\ntcgetattr(fd, &tio);\ncfmakeraw(&tio);\ncfsetispeed(&tio, B115200);\ncfsetospeed(&tio, B115200);\ntcsetattr(fd, TCSANOW, &tio);\n```","personal":""}]}]},{"id":"linux-driver","title":"Linux 驱动","subtitle":"VFS · 设备模型 · 外设","icon":"D","groups":[{"id":"driver-cdev","title":"字符设备与 VFS","points":[{"id":"driver-cdev-flow","title":"标准字符设备 cdev 与 file_operations","summary":"通过 dev_t 注册设备号、cdev_add 建立字符设备对象；open 后 struct file 关联对应 f_op。","callchain":"open(/dev/gimbal0) → VFS → 字符设备 inode/cdev → fops.open → fd\nread(fd) → VFS → fops.read → copy_to_user → 返回字节数/负 errno","pitfalls":"cdev 与 miscdevice 是不同注册方式；copy_to_user 返回未复制字节数；错误路径必须按逆序释放。","experiment":"编译加载最小 cdev 驱动，创建设备节点，用户态 open/read/write，并检查 dmesg。","project":"RK3568 云台 Linux cdev","explanation":"标准字符设备的一条完整生命周期是：申请 `dev_t` 设备号 → 初始化 `struct cdev` 并绑定 `file_operations` → `cdev_add` 注册 → 创建设备类/设备节点（依实际策略）→ 用户态 `open/read/write/ioctl`。卸载时反向销毁节点、删除 cdev、注销设备号。\n\n`inode` 对应文件系统节点，包含设备号；`struct file` 对应一次打开的文件对象，通过 `f_op` 指向该设备的操作集合。**真正建立“这个 fd 对应哪个驱动回调”联系的是打开过程中的字符设备查找与 `f_op` 关联。**\n\n在 `.read` 中，`copy_to_user` 返回未成功复制的字节数，不是 `-errno`。驱动要根据复制结果返回实际传输的字节数或合适的负错误码；不能直接把内核指针解引用给用户空间。\n\n`miscdevice` 也是字符设备，但属于简化注册封装；你云台项目使用的是**标准 cdev** 路线，不要混写。","snippet":"```c\nalloc_chrdev_region(&devno, 0, 1, \"gimbal\");\ncdev_init(&mydev.cdev, &gimbal_fops);\ncdev_add(&mydev.cdev, devno, 1);\n// 再创建设备节点；卸载时先删除节点，再 cdev_del + unregister\n\nstatic const struct file_operations gimbal_fops = {\n    .owner = THIS_MODULE,\n    .open  = gimbal_open,\n    .read  = gimbal_read,\n    .write = gimbal_write,\n};\n```","personal":""},{"id":"driver-uaccess","title":"用户空间指针与 copy_to_user","summary":"内核不能直接信任用户空间指针，数据在两种地址空间之间拷贝需专用接口。","callchain":"驱动 read → 检查 count/ppos → copy_to_user → 计算已复制字节 → 返回","pitfalls":"把 copy_to_user 返回值误认为已复制长度。","experiment":"构造短缓冲区与越界地址测试 read 返回行为（仅在实验环境）。","project":"","explanation":"用户指针 `char __user *` 是用户虚拟地址，内核不能把它当作已验证的内核地址随意解引用。`copy_from_user` / `copy_to_user` 执行带检查的用户内存访问，失败时返回**未复制的字节数**。\n\n`read` 通常是内核 → 用户，`write` 通常是用户 → 内核。驱动必须检查 `count`、缓冲区容量、偏移和对象生命周期，并注意用户内存访问可能睡眠，因此不能在不可睡眠的上下文中随意调用。\n\n错误返回一般用负 `errno`，例如 `-EFAULT` 表示非法用户地址；成功则返回实际读写字节数，不能无条件返回 0。","snippet":"```c\nstatic ssize_t my_read(struct file *f, char __user *buf,\n                       size_t count, loff_t *ppos) {\n    size_t n = min(count, available);\n    if (copy_to_user(buf, kbuf, n)) return -EFAULT;\n    return n;\n}\n```","personal":""}]},{"id":"driver-model","title":"设备模型与设备树","points":[{"id":"driver-dts","title":"设备树 DTS、compatible 与驱动匹配","summary":"设备树描述硬件资源和连接；驱动依赖对应总线匹配规则绑定设备。","callchain":"DTS → dtc 编译 DTB → 内核解析节点 → 创建 device → bus match → driver probe","pitfalls":"compatible 并非任意字符串；修改 DTS 不等于驱动一定会 probe。","experiment":"修改已有测试板 DT 节点属性，观察 /proc/device-tree 和 probe 日志。","project":"RK3568","explanation":"DTS/DTB 用于**描述硬件拓扑和资源**，不负责驱动逻辑。内核启动阶段解析 DTB，按总线/设备模型为部分节点创建 `device`；对应总线的 `match` 比较 `compatible`（或其他匹配信息），匹配后调用 `probe`。\n\n`compatible` 并非“调用驱动的命令”，而是设备与驱动匹配所需的一项信息。还要看节点 `status`、父总线是否枚举、驱动是否编进内核/模块以及依赖资源是否准备好。\n\n用户常问的“设备树改了却没 probe”：先检查最终烧录的 DTB、运行时 `/proc/device-tree`、驱动匹配表，再看内核日志和依赖是否返回 `-EPROBE_DEFER`。","snippet":"```dts\n&uart3 {\n    status = \"okay\";\n    mcu {\n        compatible = \"vendor,my-mcu\";\n        current-speed = <115200>;\n    };\n};\n```","personal":""},{"id":"driver-serdev","title":"SerDev 串口从设备驱动","summary":"SerDev 为 UART 上连接的外设提供设备模型接口，使驱动处理字节收发与生命周期。","callchain":"设备树 UART 子节点 → SerDev 控制器枚举 → 匹配 serdev_device_driver → probe → open/receive_buf","pitfalls":"不能混淆 SerDev 驱动与独立 cdev 的设备接口职责。","experiment":"在开发板上确认 UART 节点并跟踪 serdev probe、接收回调和注销路径。","project":"RK3568 / STM32","explanation":"SerDev 是面向“挂在 UART 控制器下的**非终端串口从设备**”的内核总线抽象，适合 Linux 与 MCU/蓝牙等外设的固定协议通信，而不是把串口一直暴露成普通 TTY 给用户态。\n\n设备树把从设备节点挂在 UART 控制器下；串口控制器驱动初始化后，SerDev 核心创建从设备，依据 OF 匹配表绑定 `serdev_device_driver`，在 `probe` 中打开设备、设置波特率和接收回调。\n\n发送路径：驱动调用 SerDev 写接口 → UART 控制器驱动；接收路径：UART 收到字节 → SerDev 回调 → 帧状态机/缓冲区 → 通知字符设备读者。`SerDev` 和 `cdev` 职责不同：前者连硬件串口，后者给用户态提供接口。","snippet":"```c\nstatic const struct of_device_id mcu_of_match[] = {\n    { .compatible = \"vendor,my-mcu\" }, { }\n};\nstatic struct serdev_device_driver mcu_driver = {\n    .probe = mcu_probe,\n    .driver = {.name=\"mcu\", .of_match_table=mcu_of_match},\n};\n```","personal":""},{"id":"driver-platform","title":"platform_device/driver 与 probe","summary":"platform 总线通过名称或 of_match_table 匹配设备，probe 获取资源并初始化设备。","callchain":"DT 节点 → platform_device → bus match → probe → devm_ioremap_resource/申请 IRQ → 注册用户接口","pitfalls":"module_init 不等于 probe；驱动注册不代表找到匹配设备。","experiment":"编译最小 platform 驱动，观察设备绑定与 unbind 行为。","project":"","explanation":"Linux device model 用 `struct device` 表示设备实例、`struct device_driver` 表示驱动实现，由 bus 负责 match 和 probe。Platform 总线常承载片上非可发现设备，其实例可由 DT 等固件描述创建。\n\n`module_init` 只是注册驱动的入口，不等于直接执行该设备的 `probe`。真正执行 `probe` 的前提是**设备与驱动匹配成功**且依赖资源满足；不同设备或延迟探测会有不同调用时机。\n\n在 `probe` 中获取资源（reg/IRQ/clock/reset 等）、初始化硬件、注册子系统接口。资源释放可结合 devm 系列接口，但要理解其生存周期。","snippet":"```c\nstatic struct platform_driver demo_driver = {\n    .probe = demo_probe,\n    .remove = demo_remove,\n    .driver = {.name=\"demo\", .of_match_table=demo_of_match},\n};\nmodule_platform_driver(demo_driver);\n```","personal":""}]},{"id":"driver-hw","title":"外设与并发","points":[{"id":"driver-irq","title":"GPIO、IRQ、上下半部","summary":"区分中断上下文与进程上下文，按工作特点选择 threaded IRQ 等机制。","callchain":"外设中断 → IRQ 控制器 → 内核分发 → handler/thread_fn → 唤醒等待者","pitfalls":"不要在不可睡眠上下文使用可能阻塞的 API。","experiment":"读取 /proc/interrupts 并观察 IRQ 计数，实验中用 GPIO 边沿触发。","project":"","explanation":"CPU 接收到中断后进入中断上下文，内核通过 IRQ 子系统调用设备注册的 handler。硬中断处理阶段应快速确认/清除中断源并记录状态；耗时工作可以放到 threaded IRQ、workqueue 等可调度环境执行。\n\n“上半部不能睡眠”是因为该上下文不能像普通任务一样阻塞调度。`request_threaded_irq` 可把主要处理工作放在线程化中断函数中，以便执行某些可能睡眠的操作。\n\n观察 `/proc/interrupts` 只能说明计数变化，不能独立证明协议逻辑正确；还应结合电平/边沿配置、共享 IRQ、中断风暴及设备寄存器状态排查。","snippet":"```c\nrequest_threaded_irq(irq, fast_handler, thread_handler,\n                     IRQF_ONESHOT, \"my_device\", data);\n// 中断触发 → fast_handler → 唤醒 thread_handler\n```","personal":""},{"id":"driver-i2c","title":"I2C 驱动与设备匹配","summary":"理解 I2C 控制器、适配器、client 与驱动之间的关系。","callchain":"I2C controller → adapter → i2c_client → i2c_driver probe → SMBus/I2C 传输","pitfalls":"对未知设备随意使用 i2cset 可能改变寄存器状态。","experiment":"i2cdetect/i2cget（实验设备）查看设备，并追踪驱动 probe。","project":"","explanation":"I2C 用主控制器产生 SCL/SDA 时序，设备用地址响应；Linux 内核通常通过 `i2c_adapter`、`i2c_client`、`i2c_driver` 等抽象将控制器、从设备和驱动分开。\n\n设备树从设备节点一般写在 I2C 控制器子节点，`reg` 表示设备地址（通常是 7-bit 地址）。驱动匹配后在 `probe` 里读取 WHO_AM_I 等标识并配置寄存器。\n\n`i2cdetect` 扫描可能对某些器件产生副作用，生产设备慎用。排错先看控制器状态、pinmux/电压/上拉、地址、时钟和 NACK，再看驱动逻辑。","snippet":"```dts\n&i2c2 {\n    status = \"okay\";\n    sensor@68 { compatible = \"invensense,mpu6050\"; reg = <0x68>; };\n};\n```","personal":""}]}]},{"id":"arm-boot","title":"ARM 与启动链","subtitle":"体系结构 · U-Boot · Kernel","icon":"A","groups":[{"id":"arm-basic","title":"ARM 基础","points":[{"id":"arm-exception","title":"特权级、异常与系统调用入口","summary":"理解用户态/内核态边界、异常触发及返回路径，区分 ARM32 与 ARM64 机制。","callchain":"用户指令 → SVC 异常 → 内核异常入口 → syscall 分发 → 返回用户态","pitfalls":"不要混用 ARMv7 模式命名和 ARMv8 异常级术语。","experiment":"用 strace 观察用户态 syscall，并结合架构手册画出异常入口图。","project":"","explanation":"ARM64 常用异常级：EL0 用户态、EL1 操作系统内核、EL2 虚拟化、EL3 安全监控；ARMv7 则用不同的处理器模式，不要混淆。\n\n用户态执行 `svc` 等陷入指令后，CPU 保存必要异常上下文并根据向量表进入内核异常入口，进行 syscall 分发，最后恢复上下文返回 EL0。普通外部 IRQ 也走异常机制，但来源与分发路径不同。\n\n这解释了为什么 `read()` 不是普通 C 函数直接跳到驱动：用户态库包装系统调用，CPU 发生特权级切换，内核再经 VFS 分发到对应 `f_op`。","snippet":"```text\nEL0 用户态  -- svc / 系统调用 -->  EL1 内核态\nEL1 分发 sys_* → VFS / 调度 / 驱动\n异常返回 --> 恢复 EL0 执行\n```","personal":""}]},{"id":"boot-u","title":"U-Boot 与引导","points":[{"id":"boot-flow","title":"BootROM → SPL → U-Boot → Kernel","summary":"逐阶段建立 DRAM/外设初始化环境并加载下一级镜像，最终跳转 Linux 内核。","callchain":"SoC BootROM → SPL/TPL（取决于平台）→ U-Boot proper → booti/bootm → Linux kernel → init","pitfalls":"不同 SoC 可能没有独立 SPL；booti 内核/ramdisk/DTB 地址不是 rootfs 路径。","experiment":"在开发板查看串口启动日志，标注各阶段输出与耗时。","project":"RK3506 启动优化","explanation":"BootROM 是 SoC 固化在芯片中的启动代码，按平台规则寻找启动介质并加载后继镜像。内存资源不足时，SPL/TPL 先做必要的 DRAM 初始化，再载入功能更完整的 U-Boot；是否存在这些阶段取决于 SoC/板级方案。\n\nU-Boot 负责准备并启动 Linux 内核，例如从存储器装载内核映像、DTB 和可选 initramfs，并按架构约定传递启动信息。ARM64 常见 `booti kernel_addr ramdisk_addr_or_- dtb_addr`；**三个参数是内存地址/占位，不是 rootfs 文件路径**。\n\n内核解析 DTB、初始化驱动/内存管理，之后依据 `root=` 等参数挂载根文件系统，启动 PID1（如 init），最后进入用户态服务和应用。","snippet":"```sh\n# ARM64 U-Boot 常见形式（地址以实际板端为准）\nbooti ${kernel_addr_r} - ${fdt_addr_r}\n# 参数：kernel_addr, ramdisk_addr_or_-, fdt_addr\n```","personal":""},{"id":"boot-args","title":"bootargs、DTB 与 root= 启动参数","summary":"U-Boot 将内核命令行与设备树交给 Linux，root= 指向真实根文件系统设备或机制。","callchain":"U-Boot env/脚本 → 设置 bootargs → 加载 Image/DTB → booti → 内核 early init → 解析 root= → 挂载根文件系统","pitfalls":"根文件系统不是内核镜像；DTB 不能与 initramfs 混为一谈。","experiment":"查看 printenv、/proc/cmdline、/proc/device-tree，核对 bootargs 传递。","project":"","explanation":"`bootargs` 是 U-Boot 给内核传入的命令行参数，例如 `console=... root=/dev/mmcblk0p4 rootwait rw`。内核早期启动会读取相关启动信息，结合 DTB 描述的硬件完成初始化。\n\n`root=` 指定内核阶段挂载哪个**块设备或标识**作为真正的根文件系统；`rootwait` 会等待根块设备出现。DTB 本身描述硬件，不能替代 rootfs；initramfs 是另一种早期根文件系统，可能用于准备真实根设备。\n\nA/B rootfs 回滚一般是引导逻辑选择不同分区，并传递不同的 `root=`；真正的固件回滚还需要一致性校验、版本管理和失败恢复策略。","snippet":"```sh\nsetenv bootargs 'console=ttyS2,1500000 root=/dev/mmcblk0p4 rootwait rw'\nprintenv bootargs\n# root= 改为其他分区会改变内核挂载的真实根分区\n```","personal":""}]}]},{"id":"buildroot","title":"Buildroot / BSP","subtitle":"配置 · RootFS · 系统集成","icon":"B","groups":[{"id":"br-config","title":"构建配置与依赖","points":[{"id":"br-config-in","title":"Config.in、Kconfig 与 defconfig","summary":"Config.in 定义配置项及依赖，defconfig 保存用户选择的精简配置，构建系统据此决定包和工具链。","callchain":"menuconfig/Kconfig → .config → Buildroot Makefile/包基础设施 → 工具链与软件包","pitfalls":"select 不会自动满足被选中项的全部依赖。","experiment":"定义一个外部包的 Config.in，检查依赖不满足时 menuconfig 的表现。","project":"Buildroot 定制","explanation":"Buildroot 中 `Config.in` 通过 Kconfig 语法声明菜单选项、依赖与可见性；`.config` 是当前完整配置；`defconfig` 通常只保存相对默认值的关键差异，便于版本管理。\n\n`depends on` 约束本项能否被选择；`select` 倾向于**强制使另一个选项为 y**，不会自动校验后者所有依赖，因此不宜滥用。`source` 把分散的 Config.in 纳入菜单树。\n\nBuildroot Makefile/包基础设施再根据配置组织工具链、包下载、构建、安装与镜像生成。要理解 Kconfig 定义选项 ≠ 完成软件包构建，还要有相应 `.mk`/基础设施描述。","snippet":"```text\nconfig BR2_PACKAGE_DEMO\n    bool \"demo\"\n    depends on BR2_TOOLCHAIN_HAS_THREADS\n    help\n      Demo package\n\n# depends on 约束显示与选择；select 是反向强制选择\n```","personal":""},{"id":"br-external","title":"BR2_EXTERNAL 与自定义软件包","summary":"在不直接修改 Buildroot 主仓库的情况下维护 board 配置、package、overlay 和构建脚本。","callchain":"BR2_EXTERNAL → external.desc/Config.in/external.mk → package/*.mk → 构建到 target","pitfalls":"把所有改动手工复制进 output/target 不具可复现性。","experiment":"建立最小 BR2_EXTERNAL，打包一个 Hello World 应用并验证安装到 target。","project":"","explanation":"`BR2_EXTERNAL` 用于把板级配置、额外软件包、覆盖目录等**移出 Buildroot 上游源码树**。典型外部目录包含 `external.desc`、`Config.in`、`external.mk`、`package/` 和 `configs/`。\n\n自定义包通常包含 `Config.in`（配置入口）和 `.mk`（源代码获取、依赖、构建/安装步骤）。Buildroot 包基础设施负责执行 `download → extract → configure → build → install-target` 等阶段。\n\n注意区分：`TARGET_DIR` 是 RootFS 内容 staging，`HOST_DIR` 是主机构建工具，`STAGING_DIR` 是目标 sysroot，`BINARIES_DIR` 最终包含可烧录镜像。","snippet":"```text\nmy_external/\n  external.desc\n  external.mk\n  Config.in\n  configs/myboard_defconfig\n  package/demo/Config.in\n  package/demo/demo.mk\n```","personal":""}]},{"id":"br-rootfs","title":"RootFS 与镜像","points":[{"id":"br-target","title":"output/target 与 rootfs.ext4 的区别","summary":"target 是待打包目录树；rootfs.ext4 是包含文件系统元数据、权限、布局的磁盘镜像。","callchain":"package install → output/target → fakeroot/device tables/post-image → images/rootfs.ext4 → 烧录分区 → 内核挂载","pitfalls":"target 目录不保证所有 rootfs 权限和元数据都已完成。","experiment":"生成 rootfs.ext4，用 dumpe2fs/file 检查镜像并挂载到 loop 设备观察。","project":"RK3506 RootFS 交付","explanation":"`output/target/` 是构建期间的**根文件系统目录树**，便于查看打包前内容，但不等同于一个完整可直接烧录的文件系统。`rootfs.ext4` 则包含 ext4 超级块、inode、位图、目录项、权限与时间戳等元数据。\n\nBuildroot 安装包后产生 target 目录，经过设备表、用户表、fakeroot、post-fakeroot/镜像生成等步骤（具体钩子和顺序随版本及配置），最终产出可烧录镜像。修改 target 里的文件不会自动重新生成镜像，需重新构建目标。\n\n烧录镜像到 rootfs 分区与把若干文件复制到已有分区是不同操作：前者替换整个文件系统内容和元数据，后者保留原有文件系统本体。","snippet":"```sh\nfile output/images/rootfs.ext4\n# rootfs.ext4 可用 dumpe2fs 观察超块（需要相应工具）\ndumpe2fs -h output/images/rootfs.ext4\n# output/target 是目录树，不是 ext4 映像\n```","personal":""},{"id":"br-init","title":"SysV init、inittab 与 init.d 自启动","summary":"内核完成初始化后启动 PID 1；SysV init 负责根据配置运行脚本并拉起服务。","callchain":"Kernel mount rootfs → execve(/sbin/init) → /etc/inittab → /etc/init.d/rcS → Sxx 服务脚本","pitfalls":"服务脚本执行顺序不一定等于服务真正 ready 的顺序。","experiment":"整理一次 rcS、Sxx 与应用启动日志，删除重复启动路径验证首屏行为。","project":"RK3506 启动优化","explanation":"Buildroot 常用 BusyBox init 等初始化方案。内核挂载 rootfs 后启动 PID 1，`/etc/inittab` 及 `/etc/init.d/rcS` 决定用户态启动服务。脚本执行顺序受命名、调度和同步/后台化方式影响。\n\n定位“应用已经启动但首屏迟迟不可见”时，要分清服务进程启动、Qt GUI 首帧提交、fb unblank 和背光打开四个不同时间点。优化不能简单删服务，应该把**首屏必需依赖**与非关键后台任务区分。\n\nBuildroot 常见 SysV init 与 OpenWrt 的 procd 机制不同，不要混为一谈。","snippet":"```text\nKernel 挂载 / → /sbin/init（PID1）\n/etc/inittab → /etc/init.d/rcS → S??* 启动脚本\nQt 首帧可见需要另行测量，不等于服务脚本退出\n```","personal":""}]},{"id":"br-display","title":"显示与板端交付","points":[{"id":"br-linuxfb","title":"framebuffer、背光与 Qt 首屏链路","summary":"应用完成绘制不代表屏幕已可见；需要协调 fb unblank、背光状态和 Qt 首帧时序。","callchain":"内核显示驱动 → /dev/fb0 → Qt linuxfb 渲染 → fb0 unblank → backlight → 可见首屏","pitfalls":"屏幕点亮与 RootFS/显示驱动/背光控制共同有关，不能只看一个因素。","experiment":"在板端分别控制背光与 fb blank，做 Qt 首帧打点与启动时序对照。","project":"RK3506 / RK3568","explanation":"嵌入式显示可分为内核显示驱动、framebuffer/DRM 接口、用户态图形程序以及屏幕供电/背光控制。即使 Linux 已经出现 `/dev/fb0`，也不意味着面板背光已经开启或应用已绘制。\n\nQt `linuxfb` 插件直接通过 framebuffer 绘制，不要求 X11/Wayland；首帧可见需要应用完成绘制、缓冲区状态允许显示且背光/面板正常。将 unblank/背光与首帧时间点协调，是首屏优化的一种工程方法。\n\n排查黑屏时分别检查：显示驱动/DT、fb 模式和分辨率、应用日志、屏幕电源、背光 sysfs 与 blank 状态。注意 Qt5/Qt6 和不同内核显示栈可能有所差异。","snippet":"```sh\nls -l /dev/fb0\ncat /sys/class/graphics/fb0/blank\nls /sys/class/backlight/\n# backlight 节点名称、控制路径依平台而异\n```","personal":""},{"id":"br-image","title":"RootFS 烧录、版本归档与回滚","summary":"将构建产物转成可复现的镜像交付，并区分镜像回滚和 A/B 根文件系统切换。","callchain":"构建镜像 → 校验与版本记录 → 烧录分区 → U-Boot 选择 root= → Linux 启动验证","pitfalls":"烧录内核分区和根文件系统分区不能混淆。","experiment":"归档校验和、配置及镜像，实验环境分别用两个分区启动验证。","project":"RK3506","explanation":"工程交付至少包含**可重复生成**与**可恢复旧版本**两个层面。前者要归档源码、Buildroot defconfig、外部包、补丁、工具链版本以及构建指令；后者保存能启动的完整镜像或可切换的 A/B 系统分区。\n\n单分区镜像备份回滚往往需要重新烧录旧镜像；A/B 分区策略通常需要 Bootloader 选择分区、版本/健康状态检查，不能只改 `root=` 就视作完整 OTA。\n\n每次验证应记录“镜像哈希、板卡/分区信息、启动结果、异常日志”，避免烧错镜像或以旧配置误判。","snippet":"```sh\nsha256sum output/images/rootfs.ext4\n# 发布记录：Git commit + defconfig + 工具链版本 + 镜像哈希\n# 回滚前确认分区号、容量、文件系统类型和启动参数\n```","personal":""}]}]},{"id":"rtos","title":"STM32 / FreeRTOS","subtitle":"任务 · 通信 · 控制","icon":"R","groups":[{"id":"rtos-sched","title":"任务与调度","points":[{"id":"rtos-task","title":"任务调度、优先级与同步","summary":"理解任务 Ready/Running/Blocked 等状态，区分 queue、semaphore、notification 适用场景。","callchain":"UART IRQ → DMA/接收回调 → 通知任务 → 消费队列 → 控制任务更新","pitfalls":"避免忙轮询耗尽 CPU；ISR 使用 FromISR 系列接口。","experiment":"实现采样、控制、通信三个任务，观察优先级和阻塞行为。","project":"双轴云台","explanation":"FreeRTOS 任务可处于 Running、Ready、Blocked、Suspended 等状态。优先级只影响**可运行任务之间**的调度；高优先级任务如果等队列/通知，仍会进入 Blocked。\n\n队列用于发送数据副本；二值/计数信号量用于同步与事件计数；任务通知通常更轻量，适合一对一事件或计数。ISR 不能直接使用可能阻塞的任务 API，应使用 `...FromISR` 版本并在必要时请求上下文切换。\n\n典型传感控制系统：UART 接收 → 通信解析任务 → 最新目标角队列 → 控制任务 → PWM；IMU 采样可由独立任务/定时触发供姿态内环使用。","snippet":"```c\n// 任务中的等待：阻塞等待队列元素\nxQueueReceive(target_queue, &target, portMAX_DELAY);\n// ISR 中通知：使用 ...FromISR API，并视情况触发切换\n```","personal":""}]},{"id":"rtos-control","title":"通信与执行","points":[{"id":"rtos-crc","title":"UART 二进制协议与 CRC16","summary":"确定同步帧头、长度、有效载荷、校验和超时恢复机制，区别字节流与业务帧。","callchain":"RK3568 写字符设备 → SerDev UART → STM32 串口接收 → 帧解析/CRC → 控制任务","pitfalls":"CRC 不能保证数据来源可信；要约定字节序。","experiment":"构造正确/错误 CRC 帧、丢字节和超时场景验证状态机。","project":"RK3568 云台","explanation":"UART 只保障字节发送，不具备应用层帧边界。协议设计至少约定帧头、版本/命令字、长度、payload、CRC、字节序与超时策略，接收方使用状态机查找帧头并在长度/CRC 不合法时重新同步。\n\nCRC16 用于**检测传输错误**，并不提供加密或身份认证。双方需要完全一致的多项式、初值、输入/输出反射和异或值；即使都叫 CRC16，参数不同也可能算出不同结果。\n\n边界场景包括：半包、粘包、噪声字节、假帧头、长度字段溢出、重复命令、超时后的归中/保持策略。","snippet":"```text\n示例帧：[A5 5A][CMD][LEN][PAYLOAD ...][CRC16]\n接收状态：找帧头 → 读长度 → 等待整帧 → 校验 → 分发\n超时/CRC 错误：丢弃当前候选帧并重新同步\n```","personal":""},{"id":"rtos-pwm","title":"PWM、MPU6050、互补滤波与 PID","summary":"定时器产生舵机控制 PWM；IMU 姿态估计与反馈控制需要处理零偏、噪声、限幅。","callchain":"IMU 采样 → 零偏校准 → 姿态估计 → PID 控制 → PWM 输出 → 舵机动作","pitfalls":"角度映射不能超过机械限位；PID 参数依赖负载和采样周期。","experiment":"实验舵机归中、限幅、控制周期，并记录目标角与实际角变化。","project":"双轴云台","explanation":"PWM 舵机控制常见 50Hz 周期约 20ms，控制角度需要将目标角映射为合规脉宽；具体 0°/90°/180° 对应的脉宽应参考实际舵机参数并标定，不能机械假定全部舵机相同。\n\nMPU6050 提供陀螺仪和加速度计数据，陀螺仪积分存在零偏漂移，加速度计受线性加速度影响；互补滤波将低频角度参考与高频角速度估计结合。\n\nPID 的比例项响应误差、积分项抵消稳态误差、微分项抑制快速变化；执行器限幅、积分饱和和控制周期 `dt` 是实际系统稳定性的关键。需要区分“根据目标角控制舵机”与“有真实姿态反馈的闭环控制”。","snippet":"```text\n误差 e(k) = 目标角度 - 实测角度\n控制输出 = Kp*e + Ki*误差积分 + Kd*误差变化率\n实际控制中要限制输出脉宽并防积分饱和\n```","personal":""}]}]},{"id":"debug","title":"调试与工程","subtitle":"定位 · 性能 · 构建交付","icon":"T","groups":[{"id":"debug-tool","title":"日志与问题定位","points":[{"id":"debug-kmsg","title":"dmesg、/dev/kmsg 与启动打点","summary":"内核日志和用户态应用打点可对齐关键阶段，寻找真实启动关键路径。","callchain":"Bootloader/内核日志 → init 脚本时间点 → Qt 首帧 → 背光开启 → 用户可见","pitfalls":"不能把单次耗时视为稳定结果；性能指标要明确测量边界。","experiment":"采集多轮冷启动时间点，比较分阶段耗时并记录测量口径。","project":"RK3506 启动优化","explanation":"`dmesg` 读取内核日志，`/dev/kmsg` 是内核日志接口；用户态也可以通过日志、串口输出和带时间戳标记关键事件。优化启动必须明确定义起止点，例如“上电到 Qt 首帧肉眼可见”，不能和“内核启动完成”混用。\n\n将日志排成时间线：Bootloader → Kernel → init → Qt 进程 → 首帧 → fb unblank → 背光；再判断串行依赖、可并行任务以及真正阻塞首屏的关键路径。\n\n`dmesg` 内核单调时间、用户态时钟来源可能不同，需使用可对齐的时钟源或共享打点方案；单次测量不足以表明稳定改进。","snippet":"```sh\ndmesg -T | tail -80\ncat /proc/uptime\n# 记录内核、init、Qt 首帧、fb0、背光等关键时间点\n```","personal":""},{"id":"debug-gdb","title":"GDB、strace 与内核日志联合定位","summary":"将用户态调用证据与内核侧日志关联，区分参数错误、资源状态和驱动问题。","callchain":"","pitfalls":"不应把工具输出当作最终根因，需要建立可验证假设。","experiment":"对一个会失败的 open/read 用 strace + GDB 定位 errno 和参数。","project":"","explanation":"调试要先确定错误发生在哪一层：系统调用参数 → VFS/驱动 → 总线通信 → MCU 设备；再用对应工具收集证据。`strace` 观察用户态 syscall 和 errno，`gdb` 观察进程变量与调用栈，`dmesg` 观察内核异常和驱动日志。\n\n例如 `read()` 返回 `EFAULT`：先核对用户缓冲区有效性、驱动 `copy_to_user` 参数和返回值；串口没收到回复：继续检查串口参数、数据帧状态机和板端日志。\n\n对比源码控制流、实时日志与可复现输入，比单纯看一个“测试失败”提示更可靠。","snippet":"```sh\nstrace -tt -e openat,read,write,ioctl ./app\ngdb ./app\ndmesg | tail -100\n# 从用户态 errno 对齐内核日志，再看串口/MCU 侧证据\n```","personal":""}]},{"id":"debug-eng","title":"版本与工程能力","points":[{"id":"eng-git","title":"Git、补丁与可复现构建","summary":"把配置、代码、脚本纳入版本管理，记录工具链、镜像和实验环境。","callchain":"","pitfalls":"二进制产物与源码配置承担不同用途；版本回滚不等于设备回滚。","experiment":"把 Buildroot 外部层、板级配置、启动脚本提交到 Git 并在新目录复现构建。","project":"","explanation":"工程可复现需要同时控制：源码版本、补丁、Buildroot 配置、工具链、依赖源码来源与板级烧录方案。Git 管理文本源配置，生成的镜像作为发布产物归档，二者互相补充。\n\n补丁尽量单一目的、说明问题与验证方法，避免在产品目录直接手工改动而不回流到构建系统。`git diff` 对比变更，`git log` 追溯原因，发布时记录 commit/hash 和镜像校验值。\n\n回滚分两类：**源码回滚后重新构建**，以及**板端恢复旧镜像**；它们的执行条件和风险不同。","snippet":"```sh\ngit status\ngit diff --stat\ngit log --oneline -5\nsha256sum output/images/rootfs.ext4\n```","personal":""}]}]},{"id":"projects","title":"项目与秋招","subtitle":"工程复盘 · 面试表达","icon":"P","groups":[{"id":"proj-rk3506","title":"RK3506 启动优化","points":[{"id":"proj-boot-story","title":"启动优化完整技术复盘","summary":"从日志定位到关键路径优化，再到 RootFS 镜像固化、烧录和回滚形成工程闭环。","callchain":"U-Boot → Linux → init.d → Qt 首屏 → fb0/backlight","pitfalls":"面试时要区分实际测得的耗时与推测的原因。","experiment":"整理优化前后时间线、代码 diff、实板日志和镜像记录。","project":"RK3506 启动优化","explanation":"RK3506 启动优化的技术叙事应该按照**测量口径 → 时序拆解 → 定位瓶颈 → 调整依赖 → 实板复测 → 镜像固化**展开，而不是只说“把开机从 16 秒优化到 5.6 秒”。\n\n将初始化划分为首屏必需和非必需：对后台服务与非首屏 Qt 页面做延迟构造；调整根文件系统与 `/oem`、`/userdata` 的检查路径；确保应用真正完成首帧之后再处理 fb unblank/背光，避免进程启动但黑屏。\n\n成果指标必须明确：从什么事件开始计时、何为“首屏可见”、测试次数和板卡版本。性能优化不能牺牲数据一致性、服务可用性或断电恢复能力。","snippet":"```text\n测量指标：上电 → Qt 首帧实际可见\n定位：init 链路、后台服务、Qt 页面、fsck、fb/unblank/背光\n优化：首屏关键路径优先 → 延后非关键初始化 → 多轮验证\n交付：defconfig / 脚本 / fstab → rootfs 镜像 → 板端回滚验证\n```","personal":""}]},{"id":"proj-rk3568","title":"RK3568 双轴云台","points":[{"id":"proj-gimbal-story","title":"Qt → cdev → SerDev → STM32 端到端链路","summary":"可展示 Linux 用户态、标准字符设备、串口总线驱动和 MCU 控制层的协同。","callchain":"Qt GUI → ioctl/read/write(/dev/gimbal0) → VFS/cdev → SerDev → UART3 → STM32 FreeRTOS → PWM/舵机","pitfalls":"区分真实完成功能与规划中的自动跟踪部分。","experiment":"保存驱动代码、设备树节点、串口日志和 GUI 控制舵机视频作为验收证据。","project":"RK3568/STM32 云台","explanation":"双轴云台的关键分层是**Linux 负责高层逻辑/控制界面，STM32/FreeRTOS 负责实时运动执行**。RK3568 在用户态通过 `/dev/gimbal0` 发控制命令；cdev 提供用户空间接口，SerDev 管理与 STM32 的 UART 从设备通道。\n\n从 Qt 按钮到舵机实际动作的闭环控制链已在项目实板验证：Qt → ioctl/read → VFS → cdev 的 `file_operations` → SerDev → UART3 → STM32 控制任务 → PWM 舵机。回传状态再反向进入 Linux 用户态展示。\n\n需要区分**“用户界面控制舵机已经打通”**与**“基于人物检测的全自动闭环跟踪完全实现”**，这两种验收标准不同。驱动章节应能说明 probe 如何绑定、设备节点如何建立、并发读写与超时如何处理。","snippet":"```text\nQt 按钮 → ioctl(/dev/gimbal0) → VFS → cdev/f_ops\n    → SerDev → UART3 → STM32 FreeRTOS → PWM 舵机\nSTM32 遥测 → UART → SerDev 回调 → cdev 读 → Qt 状态显示\n```","personal":""}]},{"id":"proj-interview","title":"投递与面试","points":[{"id":"job-callchain","title":"面试中的调用链表达训练","summary":"沿“谁调用谁、何时绑定、关键结构体、错误返回”解释底层机制。","callchain":"","pitfalls":"背诵 API 名称而不能解释执行时机和错误路径。","experiment":"针对一个 P0 能力点录制 3 分钟口述，标出模糊处再复盘。","project":"","explanation":"面试解释一项底层技术，最清晰的模板是：①场景/症状 ②关键对象 ③调用起点 ④中间层和绑定时机 ⑤驱动或内核行为 ⑥返回与错误处理 ⑦实板验证。\n\n例如字符设备：**用户 `read(fd)` → VFS 解析 `struct file` → `f_op->read` → 驱动读缓冲/与 SerDev 交互 → `copy_to_user` → 返回字节数或 errno**。\n\n不需要死记具体内核版本每一个内部函数名称，但要准确说明由谁调用谁、对象何时关联、哪些步骤可能阻塞，以及错误最终如何返回给用户态。","snippet":"```text\n触发时机 → 调用者 → 被调用者 → 关键数据结构\n→ 注册/绑定机制 → 设备侧动作 → 错误返回 → 验证方式\n```","personal":""}]}]}]};
+</script><script>/* Embedded Atlas / 阅读型技术手册：纯本地运行，绝不主动联网。 */
+(() => {
+ 'use strict';
+ const KEY='embedded_atlas_reference_v2', OLD='embedded_atlas_data_v1', PREF='embedded_atlas_reading_theme';
+ const $=s=>document.querySelector(s), el=s=>document.getElementById(s), copy=x=>JSON.parse(JSON.stringify(x));
+ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const uid=pre=>pre+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+ const seed=copy(window.ATLAS_SEED);
+ const seedLookup=new Map(seed.modules.flatMap(m=>m.groups.flatMap(g=>g.points)).map(p=>[p.id,p]));
+ const ARROW='<svg viewBox="0 0 24 24" class="chev-icon" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+ const MORE='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/></svg>';
+ const SECTION_TYPES=[['text','普通正文'],['key','重点结论'],['flow','调用链'],['code','代码或命令']];
+ const LEGACY_SECTION_FIELDS=[['summary','一句话抓住本质','key'],['explanation','原理与运作方式','text'],['callchain','完整调用链','flow'],['snippet','关键代码与命令','code'],['pitfalls','易错点与边界','text'],['experiment','工程验证与排查','text'],['personal','补充笔记','text']];
+
+ let data,activeId='',search='',expanded=new Set(),toastTimer=null;
+ const flatten=()=>data.modules.flatMap(m=>m.groups.flatMap(g=>g.points.map(p=>({m,g,p}))));
+ const find=id=>flatten().find(x=>x.p.id===id);
+ const getModule=id=>data.modules.find(m=>m.id===id);
+ const getGroup=(m,id)=>m?.groups.find(g=>g.id===id);
+ const date=()=>new Date().toISOString().slice(0,10);
+ function migrate(payload){
+  if(!payload||!Array.isArray(payload.modules))throw new Error('缺少 modules 数组');
+  if(!payload.modules.every(m=>typeof m.title==='string'&&Array.isArray(m.groups)&&m.groups.every(g=>Array.isArray(g.points))))throw new Error('目录格式错误');
+  if(payload.schemaVersion===2){const d=copy(payload);for(const m of d.modules)for(const g of m.groups)for(const p of g.points){
+    const builtin=seedLookup.get(p.id);if(builtin){for(const k of ['summary','explanation','snippet','callchain','pitfalls','experiment','personal','project'])if(p[k]===undefined)p[k]=builtin[k]||'';}
+    else {p.explanation??=p.notes||'';p.personal??='';p.summary??='';p.snippet??='';p.callchain??='';p.pitfalls??='';p.experiment??='';p.project??='';}
+  }return d;}
+  let d={schemaVersion:2,title:payload.title||seed.title,subtitle:'嵌入式技术手册',modules:[]};
+  for(const m of payload.modules){const nm={id:m.id||uid('m'),title:m.title,subtitle:m.subtitle||'',icon:m.icon||m.title[0],groups:[]};
+   for(const g of m.groups){const ng={id:g.id||uid('g'),title:g.title||'基础',points:[]};
+    for(const p of g.points){const builtin=seedLookup.get(p.id),base=builtin?copy(builtin):{id:p.id||uid('p'),title:p.title,summary:'',explanation:'',snippet:'',callchain:'',pitfalls:'',experiment:'',personal:'',project:''};
+      if(p.title)base.title=p.title;
+      if(!builtin){base.summary=p.summary||'';base.explanation=p.notes||p.summary||'';base.callchain=p.callchain||'';base.pitfalls=p.pitfalls||'';base.experiment=p.experiment||'';base.project=p.project||'';}
+      // Keep old user-authored custom changes/notes, but don't replace new articles with the short v1 template.
+      if(p.notes)base.personal=p.notes;
+      ng.points.push(base);
+    }nm.groups.push(ng);
+   }d.modules.push(nm);
+  }return d;
+ }
+ try{const raw=window.ATLAS_NATIVE_DATA || localStorage.getItem(KEY)||localStorage.getItem(OLD);data=raw?migrate(typeof raw==='string'?JSON.parse(raw):raw):seed;}catch(e){data=seed;}
+ if(!data.modules.length)data=seed;
+ const first=flatten()[0];activeId=first?.p.id||'';
+ function notify(message){const box=el('toast');box.textContent=message;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),3500);}
+ function persist(){
+   const json=JSON.stringify(data);
+   try{localStorage.setItem(KEY,json);}catch(e){/* 桌面程序还会独立保存到用户目录 */}
+   if(window.pywebview?.api?.save_data){window.pywebview.api.save_data(json).then(result=>{if(result&&!result.ok)notify('保存失败，请尽快导出备份');}).catch(()=>notify('保存失败，请尽快导出备份'));}
+ }
+ function md(text){
+  text=String(text||'');if(!text.trim())return ''; 
+  const arr=text.split(/\r?\n/);let html=[],paragraph=[],inCode=false,code=[],codeLang='';
+  const inline=part=>esc(part).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  const flushPara=()=>{if(paragraph.length){html.push('<p>'+inline(paragraph.join(' '))+'</p>');paragraph=[];}};
+  const flushCode=()=>{html.push(`<pre><code>${esc(code.join('\n'))}</code></pre>`);code=[];};
+  for(const ln of arr){const t=ln.trim();
+   if(t.startsWith('```')){flushPara();if(inCode){flushCode();inCode=false;}else{inCode=true;codeLang=t.slice(3);}continue;}
+   if(inCode){code.push(ln);continue;}
+   if(!t){flushPara();continue;}
+   if(/^(\* |- )/.test(t)){flushPara();html.push(`<p>• ${inline(t.replace(/^(\* |- )/,''))}</p>`);continue;}
+   if(/^#{1,4} /.test(t)){flushPara();html.push(`<p><strong>${inline(t.replace(/^#{1,4} /,''))}</strong></p>`);continue;}
+   paragraph.push(t);
+  }
+  if(inCode)flushCode();flushPara();return html.join('');
+ }
+ function sections(p){
+  if(Array.isArray(p.sections))return p.sections.map(s=>[s.id,s.title,s.content,s.kind||'text']);
+  return LEGACY_SECTION_FIELDS.filter(([id])=>String(p[id]||'').trim()).map(([id,title,kind])=>[id,title,p[id],kind]);
+ }
+
+ function renderArticle(){
+  const e=find(activeId),container=el('reader');
+  if(!e){container.innerHTML='<article class="article empty"><h2>还没有知识点</h2><button class="tool-btn" data-action="add-point">新增知识点</button></article>';el('topCrumb').textContent='技术手册';return;}
+  const {m,g,p}=e,parts=sections(p),idx=flatten().findIndex(a=>a.p.id===activeId),all=flatten();
+  el('topCrumb').textContent=`${m.title} / ${g.title}`;
+  let nav=parts.map(([id,title],i)=>`<a href="#sec-${esc(id)}" class="toc-entry ${i===0?'active':''}" data-target="sec-${esc(id)}"><span class="toc-marker"></span>${esc(title)}</a>`).join('');
+  let body=parts.map(([id,title,v,kind],i)=>{
+   const content=kind==='key'?`<div class="quick-box"><div>${md(v)}</div></div>`:kind==='flow'?`<div class="callout-code">${esc(v).replace(/\n/g,'<br>')}</div>`:`<div class="prose">${md(v)}</div>`;
+   return `<section class="note-section ${!String(v||'').trim()?'empty-block':''}" id="sec-${esc(id)}"><h2 class="section-heading"><span class="section-no">${String(i+1).padStart(2,'0')}</span><span>${esc(title)}</span></h2>${content}</section>`;
+  }).join('');
+  const foot=`<div class="footer-nav">${idx>0?`<button class="footer-link" data-action="select-point" data-id="${esc(all[idx-1].p.id)}"><span>← 上一篇</span>${esc(all[idx-1].p.title)}</button>`:'<div style="flex:1"></div>'}${idx<all.length-1?`<button class="footer-link" data-action="select-point" data-id="${esc(all[idx+1].p.id)}"><span>下一篇 →</span>${esc(all[idx+1].p.title)}</button>`:'<div style="flex:1"></div>'}</div>`;
+  container.innerHTML=`<div class="reading-column"><article class="article"><div class="article-top"><div class="article-meta"><span class="category-label">${esc(m.title)}</span><span class="meta-arrow">/</span><span>${esc(g.title)}</span></div><h1>${esc(p.title)}</h1><div class="article-tools"><button class="primary" data-action="edit-point">编辑正文 / 章节</button><button data-action="copy-note">复制正文</button><button data-action="add-point">新增知识点</button></div></div><div class="article-body">${body}${p.project?`<div class="related">关联项目：${esc(p.project)}</div>`:''}</div></article>${foot}</div><aside class="page-toc"><div class="toc-inner"><div class="toc-head">本页章节</div><nav class="toc-items">${nav}</nav></div></aside>`;
+  if(parts.length){const observer=new IntersectionObserver((entries)=>{const shown=entries.filter(x=>x.isIntersecting).sort((x,y)=>x.boundingClientRect.top-y.boundingClientRect.top);if(!shown.length)return;const id=shown[0].target.id;container.querySelectorAll('.toc-entry').forEach(a=>a.classList.toggle('active',a.dataset.target===id));},{rootMargin:'-110px 0px -64% 0px',threshold:0});container.querySelectorAll('.note-section').forEach(s=>observer.observe(s));}
+ }
+ function matches(item){if(!search)return true;const q=search.toLowerCase();return [item.p.title,item.p.summary,item.p.explanation,item.p.callchain,item.p.snippet,item.p.pitfalls,item.p.experiment,item.p.personal,...(item.p.sections||[]).flatMap(s=>[s.title,s.content]),item.m.title,item.g.title].some(x=>String(x||'').toLowerCase().includes(q));}
+ function renderTree(){let totalFound=0,html='';for(const m of data.modules){
+  let modFound=0,groupHTML='';for(const g of m.groups){
+   const items=g.points.filter(p=>matches({p,m,g}));if(search&&!items.length)continue;modFound+=items.length;
+   const ge=expanded.has(g.id)||!!search;
+   groupHTML+=`<div class="group-row"><button class="group-trigger" data-action="toggle-group" aria-expanded="${ge}" data-mid="${esc(m.id)}" data-gid="${esc(g.id)}">${ARROW.replace('class="chev-icon"',`class="chev-icon ${ge?'expanded':''}"`)}<span class="group-name">${esc(g.title)}</span></button><button class="tree-more" data-action="group-menu" data-mid="${esc(m.id)}" data-gid="${esc(g.id)}" title="管理：${esc(g.title)}" aria-label="管理子模块 ${esc(g.title)}">${MORE}</button></div>`;
+   if(ge)groupHTML+=`<div class="points">${items.map(p=>`<button class="point-link ${activeId===p.id?'active':''}" data-action="select-point" data-id="${esc(p.id)}" title="${esc(p.title)}">${esc(p.title)}</button>`).join('')}</div>`;
+  }
+  if(search&&!modFound)continue;totalFound+=modFound;
+  const isExpanded=expanded.has(m.id)||!!search;
+  html+=`<div class="module-row"><button class="module-main ${isExpanded?'expanded':''}" aria-expanded="${isExpanded}" data-action="toggle-module" data-id="${esc(m.id)}"><span class="mod-icon">${esc((m.icon||m.title[0]).slice(0,2))}</span><span class="mod-title">${esc(m.title)}</span>${ARROW.replace('class="chev-icon"',`class="chev-icon ${isExpanded?'expanded':''}"`)}</button><button class="tree-more" data-action="module-menu" data-id="${esc(m.id)}" title="管理：${esc(m.title)}" aria-label="管理大模块 ${esc(m.title)}">${MORE}</button></div>`;
+  if(isExpanded)html+=`<div class="groups">${groupHTML}<button class="group-trigger" data-action="add-group" data-id="${esc(m.id)}">＋ 添加子模块</button></div>`;
+ }
+ if(search&&!totalFound)html='<div class="tree-empty">没有匹配的知识点</div>';
+ el('tree').innerHTML=html;
+ }
+ function render(){renderTree();renderArticle();}
+ function expandFor(id){const e=find(id);if(e){expanded.add(e.m.id);expanded.add(e.g.id);}}
+ expandFor(activeId);render();try{if(localStorage.getItem(PREF)==='dark')document.body.classList.add('dark');}catch(e){}
+ function navigate(id){if(!find(id))return;activeId=id;expanded=new Set();expandFor(id);render();const current=el('tree').querySelector('.point-link.active');current?.scrollIntoView({block:'nearest',behavior:'instant'});el('sidebar').classList.remove('open');el('overlay').hidden=true;window.scrollTo({top:0,behavior:'instant'});}
+ function closeModal(){el('modalLayer').hidden=true;el('modalLayer').innerHTML='';}
+ const field=(name,title,value='',type='input',wide=false,opts=[])=>`<div class="field ${wide?'wide':''}"><label for="f-${name}">${esc(title)}</label>${type==='textarea'?`<textarea name="${name}" id="f-${name}" rows="${name==='explanation'?9:name==='snippet'?6:3}">${esc(value)}</textarea>`:type==='select'?`<select name="${name}" id="f-${name}">${opts.map(a=>`<option value="${esc(a[0])}" ${String(value)===String(a[0])?'selected':''}>${esc(a[1])}</option>`).join('')}</select>`:`<input id="f-${name}" name="${name}" value="${esc(value)}" ${name==='title'?'required':''}/>`}</div>`;
+ function modal(title,fields,onSave,opts={}){
+  const box=el('modalLayer');box.hidden=false;
+  box.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modal-header"><h2>${esc(title)}</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="editForm"><div class="fields">${fields}</div><div class="modal-footer"><div>${opts.canDelete?'<button class="danger" type="button" data-action="delete-current">删除此项</button>':''}</div><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存内容</button></div></div></form></div>`;
+  const form=el('editForm');form.addEventListener('submit',ev=>{ev.preventDefault();const values=Object.fromEntries(new FormData(form));try{onSave(values);closeModal();persist();render();notify('已保存');}catch(err){notify('保存失败：'+err.message);}});
+  box.onclick=ev=>{if(ev.target===box)closeModal();};
+  const input=form.querySelector('input');if(input)input.focus();
+ }
+ let deletionHandler=null;
+ function pointEditor(create=false,modId='',groupId=''){
+  closeContext();
+  const existing=find(activeId),m=getModule(modId)||existing?.m||data.modules[0];if(!m)return notify('请先创建大模块');
+  const g=getGroup(m,groupId)||(existing?.m.id===m.id?existing.g:null)||m.groups[0];if(!g)return notify('请先创建子模块');
+  const old=create?null:existing;if(!create&&!old)return;
+  const p=create?{id:'',title:'',project:'',sections:[]}:copy(old.p);
+  let draft=sections(p).map(([id,title,content,kind])=>({id,title,content:content||'',kind:kind||'text'}));
+  const moduleOpts=data.modules.map(a=>[a.id,a.title]);const groupOpts=(create?m:old.m).groups.map(b=>[(create?m:old.m).id+'::'+b.id,b.title]);
+  const box=el('modalLayer');box.hidden=false;
+  box.innerHTML=`<div class="modal article-edit-modal" role="dialog" aria-modal="true" aria-label="${create?'新增知识点':'编辑知识点'}"><div class="modal-header"><h2>${create?'新增知识点':'编辑知识点'}</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="articleForm"><div class="fields">${field('title','知识点名称',p.title,'input',true)}${field('moduleId','所属大模块',create?m.id:old.m.id,'select',false,moduleOpts)}${field('groupId','所属子模块',(create?m:old.m).id+'::'+(create?g:old.g).id,'select',false,groupOpts)}${field('project','关联项目（可选）',p.project||'','input',true)}</div><div class="block-editor-bar"><h3>正文章节</h3><button class="block-add-btn" type="button" id="addBlock">＋ 新增章节</button></div><div id="blockEditor" class="block-editor"></div><div class="modal-footer"><div>${create?'':'<button class="danger" type="button" id="deletePoint">删除知识点</button>'}</div><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存</button></div></div></form></div>`;
+  const form=el('articleForm'),list=el('blockEditor');let openId=draft[0]?.id||'';
+  function pull(){draft=[...list.querySelectorAll('.editor-block')].map(card=>({id:card.dataset.sid,title:card.querySelector('.editor-title').value,kind:card.querySelector('.editor-kind').value,content:card.querySelector('textarea').value}));}
+  function paint(){list.innerHTML=draft.map((s,i)=>`<div class="editor-block" data-sid="${esc(s.id)}"><div class="editor-block-head"><span class="editor-index">${String(i+1).padStart(2,'0')}</span><input class="editor-title" aria-label="章节名称" value="${esc(s.title)}"/><select class="editor-kind" aria-label="章节类型">${SECTION_TYPES.map(([k,l])=>`<option value="${k}" ${s.kind===k?'selected':''}>${l}</option>`).join('')}</select><button class="block-action" type="button" data-block-action="up" title="上移" ${i===0?'disabled':''}>↑</button><button class="block-action" type="button" data-block-action="down" title="下移" ${i===draft.length-1?'disabled':''}>↓</button><button class="block-action danger" type="button" data-block-action="remove" title="删除章节">×</button><button class="block-action" type="button" data-block-action="toggle" title="展开或收起">${s.id===openId?'−':'+'}</button></div><div class="editor-body" ${s.id===openId?'':'hidden'}><textarea aria-label="章节正文" spellcheck="false">${esc(s.content)}</textarea></div></div>`).join('');}
+  paint();
+  el('addBlock').addEventListener('click',()=>{pull();const id=uid('section');draft.push({id,title:'新章节',kind:'text',content:''});openId=id;paint();list.lastElementChild?.scrollIntoView({block:'nearest'});list.lastElementChild?.querySelector('.editor-title')?.focus();});
+  list.addEventListener('click',ev=>{const b=ev.target.closest('[data-block-action]');if(!b)return;pull();const id=b.closest('.editor-block').dataset.sid,i=draft.findIndex(x=>x.id===id);if(i<0)return;const action=b.dataset.blockAction;
+   if(action==='remove'){if(!confirm(`确定删除章节「${draft[i].title}」？`))return;draft.splice(i,1);if(openId===id)openId=draft[Math.min(i,draft.length-1)]?.id||'';}
+   if(action==='up'&&i>0)[draft[i-1],draft[i]]=[draft[i],draft[i-1]];
+   if(action==='down'&&i<draft.length-1)[draft[i+1],draft[i]]=[draft[i],draft[i+1]];
+   if(action==='toggle')openId=openId===id?'':id;
+   paint();
+  });
+  const ms=el('f-moduleId'),gs=el('f-groupId');ms.addEventListener('change',()=>{const mod=getModule(ms.value);gs.innerHTML=(mod?.groups||[]).map(x=>`<option value="${esc(mod.id+'::'+x.id)}">${esc(x.title)}</option>`).join('');});
+  form.addEventListener('submit',ev=>{ev.preventDefault();pull();const v=Object.fromEntries(new FormData(form));if(!v.title?.trim())return notify('知识点名称不能为空');if(draft.some(s=>!s.title.trim()))return notify('章节名称不能为空');
+   const part=v.groupId?.split('::')||[],dest=getModule(part[0]),target=getGroup(dest,part[1]);if(!dest||!target||dest.id!==v.moduleId)return notify('请选择有效的子模块');
+   const clean={...p,id:create?uid('p'):p.id,title:v.title.trim(),project:v.project||'',sections:draft.map(s=>({...s,title:s.title.trim()}))};
+   if(!create){const prev=find(p.id);if(prev){const pos=prev.g.points.findIndex(x=>x.id===p.id);prev.g.points.splice(pos,1);if(prev.g===target)target.points.splice(pos,0,clean);else target.points.push(clean);}}else target.points.push(clean);activeId=clean.id;expanded.add(dest.id);expanded.add(target.id);search='';el('search').value='';closeModal();persist();render();notify('已保存');
+  });
+  if(!create)el('deletePoint').addEventListener('click',()=>{if(!confirm(`确定删除知识点「${p.title}」？`))return;const prev=find(p.id);if(prev)prev.g.points=prev.g.points.filter(x=>x.id!==p.id);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();notify('已删除');});
+  box.onclick=ev=>{if(ev.target===box)closeModal();};
+  el('f-title').focus();
+ }
+ function moduleEditor(id=''){
+  const old=getModule(id),p=old||{title:'',subtitle:'',icon:''};
+  deletionHandler=old?()=>{if(!confirm(`确定删除「${old.title}」和下面所有知识点？此操作不可撤销。`))return;data.modules=data.modules.filter(x=>x.id!==id);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();}:null;
+  modal(old?'编辑大模块':'新增大模块',[field('title','大模块名称',p.title,'input',true),field('subtitle','描述（可选）',p.subtitle,'input',true),field('icon','目录标记（1-2字）',p.icon,'input')].join(''),v=>{
+   if(!v.title.trim())throw Error('名称不能为空');if(old)Object.assign(old,{title:v.title.trim(),subtitle:v.subtitle,icon:(v.icon||v.title[0]).slice(0,2)});
+   else {const nm={id:uid('m'),title:v.title.trim(),subtitle:v.subtitle,icon:(v.icon||v.title[0]).slice(0,2),groups:[]};data.modules.push(nm);expanded.add(nm.id);}
+  },{canDelete:!!old});
+ }
+ function groupEditor(mid,gid=''){
+  const m=getModule(mid);if(!m)return;const g=getGroup(m,gid),obj=g||{title:''};
+  deletionHandler=g?()=>{if(!confirm(`确定删除子模块「${g.title}」及其中所有知识点？`))return;m.groups=m.groups.filter(x=>x.id!==gid);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();}:null;
+  modal(g?'编辑子模块':'新增子模块',field('title','子模块名称',obj.title,'input',true),v=>{if(!v.title.trim())throw Error('名称不能为空');if(g)g.title=v.title.trim();else{const ng={id:uid('g'),title:v.title.trim(),points:[]};m.groups.push(ng);expanded.add(m.id);expanded.add(ng.id);}},{canDelete:!!g});
+ }
+ function exportData(){
+   if(window.pywebview?.api?.export_data){window.pywebview.api.export_data(JSON.stringify(data,null,2)).then(result=>{if(result?.ok)notify('备份已保存：'+result.path);else if(result&&!result.cancelled)notify('备份失败：'+(result.error||'未知错误'));}).catch(()=>notify('备份失败'));return;}
+   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=`Embedded_Atlas_知识备份_${date()}.json`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('备份已导出，请妥善保留 JSON 文件');}
+ function importData(file){if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const obj=migrate(JSON.parse(reader.result));if(!confirm('导入会覆盖当前浏览器内的数据，建议先导出备份。确定继续吗？'))return;data=obj;activeId=flatten()[0]?.p.id||'';expanded=new Set();expandFor(activeId);search='';el('search').value='';persist();render();notify('导入成功');}catch(e){notify('导入失败：'+e.message);}finally{el('fileIn').value='';}};reader.onerror=()=>notify('文件读取失败');reader.readAsText(file,'utf-8');}
+ function closeContext(){el('contextMenu').hidden=true;el('contextMenu').innerHTML='';}
+ function openContext(button,entries){const menu=el('contextMenu');if(!menu.hidden && menu.dataset.owner===button.dataset.action+'|'+(button.dataset.gid||button.dataset.id)){closeContext();return;}
+  menu.dataset.owner=button.dataset.action+'|'+(button.dataset.gid||button.dataset.id);menu.innerHTML=entries.map(x=>x==='-'?'<div class="context-divider"></div>':`<button type="button" data-action="${esc(x[0])}" ${x[2]||''}>${esc(x[1])}</button>`).join('');menu.hidden=false;
+  const rect=button.getBoundingClientRect(),mw=180;menu.style.top=Math.min(rect.bottom+5,window.innerHeight-entries.length*43-20)+'px';menu.style.left=Math.min(rect.left,window.innerWidth-mw-12)+'px';
+ }
+ async function copyArticle(){const e=find(activeId);if(!e)return;const p=e.p;const parts=sections(p).map(([id,t,v])=>`## ${t}\n\n${v||''}`).join('\n\n');const plain=`# ${p.title}\n\n${parts}`;try{await navigator.clipboard.writeText(plain);notify('完整笔记已复制');}catch(ex){const t=document.createElement('textarea');document.body.appendChild(t);t.value=plain;t.select();try{document.execCommand('copy');notify('完整笔记已复制');}catch(e){notify('当前浏览器不允许复制，请手动选择文本');}t.remove();}}
+ document.addEventListener('click',ev=>{if(!ev.target.closest('#contextMenu')&&!ev.target.closest('.tree-more'))closeContext();const b=ev.target.closest('[data-action]');if(!b)return;const ac=b.dataset.action;
+  if(ac==='module-menu'){const id=b.dataset.id;openContext(b,[['edit-module','重命名 / 编辑',`data-id="${esc(id)}"`],['add-group','新增子模块',`data-id="${esc(id)}"`]]);return;}
+  if(ac==='group-menu'){const mid=b.dataset.mid,gid=b.dataset.gid;openContext(b,[['edit-group','重命名 / 编辑',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`],['add-point','新增知识点',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`]]);return;}
+  if(b.closest('#contextMenu'))closeContext();
+  if(ac==='select-point'){navigate(b.dataset.id);return;}
+  if(ac==='toggle-module'){const id=b.dataset.id;if(expanded.has(id))expanded.delete(id);else expanded.add(id);renderTree();return;}
+  if(ac==='toggle-group'){const id=b.dataset.gid;if(expanded.has(id))expanded.delete(id);else expanded.add(id);renderTree();return;}
+  if(ac==='toggle-menu'){el('sidebar').classList.toggle('open');el('overlay').hidden=!el('sidebar').classList.contains('open');return;}
+  if(ac==='menu-close'){el('sidebar').classList.remove('open');el('overlay').hidden=true;return;}
+  if(ac==='theme'){document.body.classList.toggle('dark');try{localStorage.setItem(PREF,document.body.classList.contains('dark')?'dark':'light');}catch(e){}return;}
+  if(ac==='edit-point'){pointEditor();return;}if(ac==='add-point'){pointEditor(true,b.dataset.mid||'',b.dataset.gid||'');return;}
+  if(ac==='add-module'){moduleEditor();return;}if(ac==='edit-module'){moduleEditor(b.dataset.id);return;}
+  if(ac==='add-group'){groupEditor(b.dataset.id);return;}if(ac==='edit-group'){groupEditor(b.dataset.mid,b.dataset.gid);return;}
+  if(ac==='export'){exportData();return;}if(ac==='import'){el('fileIn').click();return;}if(ac==='copy-note'){copyArticle();return;}
+  if(ac==='close-modal'){closeModal();return;}if(ac==='delete-current'){deletionHandler?.();return;}
+ });
+ document.addEventListener('pywebviewready',()=>{if(window.pywebview?.api?.save_data)window.pywebview.api.save_data(JSON.stringify(data)).catch(()=>{});});
+ el('search').addEventListener('input',e=>{search=e.target.value.trim();if(search){const first=flatten().find(matches);if(first)activeId=first.p.id;}render();});
+ el('fileIn').addEventListener('change',e=>importData(e.target.files[0]));
+ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();el('search').focus();}if(e.key==='Escape'){closeModal();el('sidebar').classList.remove('open');el('overlay').hidden=true;}});
+})();
+</script>
+</body></html>
