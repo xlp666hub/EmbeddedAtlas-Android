@@ -139,6 +139,7 @@ body.dark .section-heading {color:#e7eef9}
 body.dark .note-section {border-color:#2b3b50}
 body.dark .prose {color:#bdcbdc}
 body.dark .prose strong {color:#fff}
+body.dark .prose pre code {background:transparent;color:inherit;border:0;padding:0;border-radius:0;font-size:inherit}
 body.dark .quick-box {background:#1a3936;border-color:#295a4d;color:#c4e8dd}
 body.dark .callout-code {background:#0d1a28;color:#dbeaf3}
 body.dark .toc-entry {color:#8ca4c1}
@@ -228,21 +229,159 @@ body.dark .block-add-btn{background:#223a55;border-color:#35516f;color:#d0e2f7}
 body.dark .block-action:hover{background:#2d4058}
 @media(max-width:660px){.editor-block-head{flex-wrap:wrap}.editor-title{min-width:calc(100% - 45px)}.editor-kind{max-width:130px}.block-editor{margin:0 14px 8px}.block-editor-bar{margin:5px 14px 12px}}
 
+
+/* V3: offline Markdown editing in every section; keeps the original layout and styles. */
+.article-edit-modal {width:min(1130px,calc(100vw - 28px));}
+.editor-body {padding:0 13px 17px;}
+.editor-body textarea.md-source {min-height:220px;font:13px/1.8 'Cascadia Code',Consolas,'Microsoft YaHei',monospace;tab-size:4;white-space:pre-wrap;resize:vertical;border-radius:0 0 8px 8px;}
+.md-toolbar {display:flex;gap:5px;align-items:center;flex-wrap:wrap;padding:9px 10px;background:#f5f8fc;border:1px solid #e0e8f1;border-bottom:0;border-radius:8px 8px 0 0;}
+.modal .md-toolbar button {font:650 12px 'Microsoft YaHei',sans-serif;min-width:34px;padding:7px 9px;background:#fff;border:1px solid #dde6ef;color:#415775;border-radius:6px;}
+.modal .md-toolbar button:hover,.modal .md-toolbar button.active {background:#dceafb;color:#244c82;border-color:#a9c7ed;}
+.md-toolbar .md-separator {height:20px;border-left:1px solid #d3deea;margin:0 4px;}
+.md-toolbar .md-guide {color:#7b8a9c;font-size:11px;margin-left:auto;}
+.md-preview-wrap {margin-top:12px;background:var(--paper);border:1px solid var(--line);border-radius:9px;overflow:hidden;}
+.md-preview-head {padding:9px 13px;font-size:11px;font-weight:700;color:var(--nav);background:var(--soft);border-bottom:1px solid var(--line);}
+.md-preview {padding:16px 19px;max-height:380px;overflow:auto;}
+.md-preview .prose {font-size:13.5px;line-height:1.9;}
+.md-preview-empty {font-size:12px;color:var(--muted);}
+.editor-help {color:var(--muted);font-size:11px;line-height:1.5;padding:7px 1px 0;}
+.prose h2,.prose h3,.prose h4 {color:var(--ink);font-weight:800;line-height:1.55;letter-spacing:0;margin:23px 0 11px;}
+.prose h2 {font-size:19px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+.prose h3 {font-size:16px;}
+.prose h4 {font-size:14px;}
+.prose p+h2,.prose p+h3 {margin-top:24px;}
+.prose pre {margin:14px 0 18px;white-space:pre;max-width:100%;}
+.prose pre code {font-family:Consolas,'Cascadia Code',monospace;white-space:pre;}
+.prose ul,.prose ol {padding-left:25px;margin:10px 0 18px;}
+.prose li {margin-bottom:4px;}
+.prose blockquote {border-left:3px solid #7195be;background:var(--soft);padding:12px 17px;margin:15px 0;border-radius:0 6px 6px 0;}
+.prose blockquote p:last-child {margin-bottom:0;}
+.prose a {color:#3669a8;text-decoration:underline;text-underline-offset:3px;}
+.prose hr {border:0;border-top:1px solid var(--line);margin:20px 0;}
+.prose .md-table-scroll {overflow-x:auto;margin:13px 0 19px;}
+.prose table {border-collapse:collapse;width:100%;font-size:12px;line-height:1.6;}
+.prose th,.prose td {padding:9px 12px;border:1px solid var(--line);vertical-align:top;text-align:left;}
+.prose th {background:var(--soft);font-weight:750;}
+body.dark .md-toolbar {background:#203043;border-color:#354961;}
+body.dark .modal .md-toolbar button {background:#263b51;color:#d6e6f8;border-color:#36516d;}
+body.dark .modal .md-toolbar button:hover,body.dark .modal .md-toolbar button.active {background:#315b85;}
+body.dark .md-toolbar .md-separator {border-color:#41566f;}
+body.dark .editor-body textarea.md-source {background:#142234;color:#e7eef8;border-color:#34485f;}
+body.dark .prose a {color:#9fc9ff;}
+@media(max-width:660px){.md-toolbar .md-guide {width:100%;}.md-preview {padding:12px}.editor-body textarea.md-source {min-height:180px;}}
+
+/* V3.1: clearly separate section titles from Markdown subheadings. */
+.section-heading {
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  padding:0 0 18px;
+  margin:0 0 27px;
+  border-bottom:1px solid #dce5f0;
+  color:#14243a;
+  font-size:26px;
+  line-height:1.4;
+  font-weight:850;
+  letter-spacing:-.65px;
+}
+.section-heading::after {
+  content:'';
+  position:absolute;
+  left:0;
+  bottom:-2px;
+  width:48px;
+  height:3px;
+  border-radius:3px;
+  background:#5482be;
+}
+.section-no {
+  flex:0 0 35px;
+  display:grid;
+  place-items:center;
+  width:35px;
+  height:35px;
+  border:1px solid #dbe7f5;
+  border-radius:9px;
+  background:#edf3fb;
+  color:#5075a8;
+  font:700 12px/1 Consolas,'Courier New',monospace;
+  letter-spacing:0;
+}
+.section-no::after {content:none;}
+body.dark .section-heading {color:#f2f6ff;border-color:#364963;}
+body.dark .section-heading::after {background:#80ace5;}
+body.dark .section-no {background:#243b56;border-color:#365471;color:#a8caf4;}
+@media(max-width:660px) {
+  .section-heading {font-size:21px;gap:11px;padding-bottom:14px;margin-bottom:20px;letter-spacing:-.4px;}
+  .section-no {flex-basis:30px;width:30px;height:30px;font-size:11px;}
+  .section-heading::after {width:36px;}
+}
+@media print {
+  .section-heading {font-size:19pt;break-after:avoid;}
+  .section-no {print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+}
+
+
+/* Navigation polish: one creation entry per level; destructive actions only in ... menus. */
+.sidebar-bottom {flex:0 0 auto;padding:12px 18px 20px;border-top:1px solid #2c3e53;display:flex;flex-direction:column;gap:5px;background:var(--side);}
+.sidebar-bottom-btn {width:100%;display:flex;align-items:center;gap:12px;padding:11px 13px;color:#aabbcf;background:transparent;border:1px solid transparent;border-radius:9px;font-weight:650;font-size:12px;text-align:left;transition:background .15s,color .15s;}
+.sidebar-bottom-btn:hover,.sidebar-bottom-btn:focus-visible {background:#22344c;color:#f1f6ff;}
+.sidebar-bottom-symbol {display:inline-grid;place-items:center;width:26px;height:26px;flex:0 0 26px;font:700 18px/1 'Microsoft YaHei',sans-serif;color:#92b8ec;background:#24364c;border:1px solid #35485d;border-radius:7px;}
+.sidebar-bottom-btn:nth-child(2) .sidebar-bottom-symbol {font-size:16px;}
+.context-menu .context-danger {color:#b2434a;}
+.context-menu .context-danger:hover {background:#fff0f0;color:#9f2633;}
+body.dark .context-menu .context-danger {color:#ff9a9e;}
+body.dark .context-menu .context-danger:hover {background:#512b38;color:#ffc2c5;}
+.empty-help {font-size:13px;line-height:1.8;color:var(--muted);}
+.settings-modal {width:min(560px,calc(100vw - 28px));}
+.settings-modal .fields {display:block;}
+.settings-note {padding:0 0 16px;font-size:12px;line-height:1.85;color:var(--muted);}
+.settings-theme-options {display:grid;gap:9px;}
+.settings-theme-option {display:flex;align-items:center;gap:12px;padding:13px 15px;border:1px solid var(--line);border-radius:9px;background:var(--paper);cursor:pointer;}
+.settings-theme-option:hover {background:var(--soft);}
+.settings-theme-option:has(input:checked) {border-color:#7ca3da;background:var(--soft);}
+.settings-theme-option input {accent-color:#397ac2;width:17px;height:17px;margin:0;flex:0 0 17px;}
+.settings-theme-option span {display:flex;flex-direction:column;gap:4px;}
+.settings-theme-option strong {font-size:13px;color:var(--ink);font-weight:750;}
+.settings-theme-option small {color:var(--muted);font-size:11px;}
+body.dark .sidebar-bottom {border-top-color:#304257;}
+@media(max-width:660px){.sidebar-bottom {padding:9px 13px 15px;}}
+
+
+/* 三级目录：知识点相对所属子模块进一步缩进，增加竖向层级线。 */
+.tree .points { margin:4px 0 8px 21px; padding:0 0 0 10px; border-left:1px solid #d5dfe9; }
+.tree .point-link { padding:8px 10px 8px 14px; overflow-wrap:anywhere; }
+.tree .point-link.active:before { left:0; }
+body.dark .tree .points { border-left-color:#425572; }
+/* 大模块的数字编号，根据 data.modules 的实时顺序自动生成 */
+.mod-icon { font-size:11px; font-variant-numeric:tabular-nums; font-weight:750; }
+/* 子模块合并：与现有编辑弹窗保持相同的视觉系统 */
+.merge-modal{width:min(620px,calc(100vw - 28px))}
+.merge-modal .fields{display:flex;flex-direction:column;gap:16px}
+.merge-overview{padding:13px 15px;border:1px solid var(--line);border-radius:10px;background:var(--soft);color:var(--ink);line-height:1.8;font-size:12px}
+.merge-overview strong{color:var(--nav-strong)}
+.merge-hint{font-size:12px;line-height:1.75;color:var(--muted)}
+.merge-hint.warn{color:#986122}
+.merge-backup{margin-right:auto}
+body.dark .merge-overview strong{color:#d6e9ff}
+body.dark .merge-hint.warn{color:#e4bb7b}
 </style>
 </head><body>
 <div class="app-shell">
  <aside id="sidebar" class="sidebar" aria-label="全部知识目录">
   <div class="brand"><span class="logo">E<span>·</span></span><div><strong>Embedded Atlas</strong><small>嵌入式技术手册</small></div></div>
-  <div class="side-top"><div class="side-heading">KNOWLEDGE LIBRARY <button class="plain add-root" data-action="add-module" title="新增大模块">＋</button></div></div>
-  <nav id="tree" class="tree"></nav>
-  
+  <nav id="tree" class="tree" aria-label="知识模块列表"></nav>
+  <div class="sidebar-bottom">
+   <button type="button" class="sidebar-bottom-btn" data-action="add-module"><span class="sidebar-bottom-symbol" aria-hidden="true">＋</span><span>新增大模块</span></button>
+   <button type="button" class="sidebar-bottom-btn" data-action="settings"><span class="sidebar-bottom-symbol" aria-hidden="true">⚙</span><span>设置</span></button>
+  </div>
  </aside>
  <div id="overlay" class="overlay" data-action="menu-close" hidden></div>
  <div class="workspace">
   <header class="topbar"><button class="icon mobile-menu" data-action="toggle-menu" aria-label="显示目录">☰</button>
    <div class="top-crumb"><span class="crumb-logo">⌘</span><span id="topCrumb">技术手册 / C 语言</span></div>
-   <div class="top-actions"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索知识点、函数、关键词…" autocomplete="off"/><kbd>Ctrl K</kbd></label>
-    <button class="tool-btn desktop-btn" data-action="add-point">＋ 知识点</button>
+   <div class="top-actions"><label class="search"><span>⌕</span><input id="search" type="search" placeholder="搜索知识点、函数、关键词…" autocomplete="off"/></label>
     <button class="tool-btn desktop-btn" data-action="import">导入</button>
     <button class="tool-btn desktop-btn" data-action="export">备份</button>
     <button class="icon" data-action="theme" title="切换主题">☼</button>
@@ -269,7 +408,7 @@ body.dark .block-action:hover{background:#2d4058}
  const SECTION_TYPES=[['text','普通正文'],['key','重点结论'],['flow','调用链'],['code','代码或命令']];
  const LEGACY_SECTION_FIELDS=[['summary','一句话抓住本质','key'],['explanation','原理与运作方式','text'],['callchain','完整调用链','flow'],['snippet','关键代码与命令','code'],['pitfalls','易错点与边界','text'],['experiment','工程验证与排查','text'],['personal','补充笔记','text']];
 
- let data,activeId='',search='',expanded=new Set(),toastTimer=null;
+ let data,activeId='',search='',expanded=new Set(),toastTimer=null,saveQueue=Promise.resolve();
  const flatten=()=>data.modules.flatMap(m=>m.groups.flatMap(g=>g.points.map(p=>({m,g,p}))));
  const find=id=>flatten().find(x=>x.p.id===id);
  const getModule=id=>data.modules.find(m=>m.id===id);
@@ -296,51 +435,89 @@ body.dark .block-action:hover{background:#2d4058}
   }return d;
  }
  try{const raw=window.ATLAS_NATIVE_DATA || localStorage.getItem(KEY)||localStorage.getItem(OLD);data=raw?migrate(typeof raw==='string'?JSON.parse(raw):raw):seed;}catch(e){data=seed;}
- if(!data.modules.length)data=seed;
  const first=flatten()[0];activeId=first?.p.id||'';
  function notify(message){const box=el('toast');box.textContent=message;box.classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.remove('visible'),3500);}
  function persist(){
    const json=JSON.stringify(data);
    try{localStorage.setItem(KEY,json);}catch(e){/* 桌面程序还会独立保存到用户目录 */}
-   if(window.pywebview?.api?.save_data){window.pywebview.api.save_data(json).then(result=>{if(result&&!result.ok)notify('保存失败，请尽快导出备份');}).catch(()=>notify('保存失败，请尽快导出备份'));}
+   if(window.pywebview?.api?.save_data){saveQueue=saveQueue.catch(()=>{}).then(()=>window.pywebview.api.save_data(json)).then(result=>{if(result&&!result.ok)notify('保存失败，请尽快导出备份');}).catch(()=>notify('保存失败，请尽快导出备份'));}
  }
- function md(text){
-  text=String(text||'');if(!text.trim())return ''; 
-  const arr=text.split(/\r?\n/);let html=[],paragraph=[],inCode=false,code=[],codeLang='';
-  const inline=part=>esc(part).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
-  const flushPara=()=>{if(paragraph.length){html.push('<p>'+inline(paragraph.join(' '))+'</p>');paragraph=[];}};
-  const flushCode=()=>{html.push(`<pre><code>${esc(code.join('\n'))}</code></pre>`);code=[];};
-  for(const ln of arr){const t=ln.trim();
-   if(t.startsWith('```')){flushPara();if(inCode){flushCode();inCode=false;}else{inCode=true;codeLang=t.slice(3);}continue;}
-   if(inCode){code.push(ln);continue;}
-   if(!t){flushPara();continue;}
-   if(/^(\* |- )/.test(t)){flushPara();html.push(`<p>• ${inline(t.replace(/^(\* |- )/,''))}</p>`);continue;}
-   if(/^#{1,4} /.test(t)){flushPara();html.push(`<p><strong>${inline(t.replace(/^#{1,4} /,''))}</strong></p>`);continue;}
-   paragraph.push(t);
+  // Markdown is parsed locally. User-provided HTML is *always* escaped; links only allow safe protocols.
+  function mdInline(source){
+   const protectedParts=[];
+   let value=String(source||'').replace(/`([^`\n]+)`/g,(_,body)=>{const id=protectedParts.push('<code>'+esc(body)+'</code>')-1;return '\u0002'+id+'\u0003';});
+   value=value.replace(/\[([^\]\n]+)\]\(([^)\s]+)\)/g,(all,label,url)=>{
+    if(!/^(https?:\/\/|mailto:)/i.test(url))return all;
+    const id=protectedParts.push('<a href="'+esc(url)+'" rel="noopener noreferrer" target="_blank">'+esc(label)+'</a>')-1;
+    return '\u0002'+id+'\u0003';
+   });
+   value=esc(value)
+    .replace(/\*\*([^*\n]+)\*\*/g,'<strong>$1</strong>')
+    .replace(/__([^_\n]+)__/g,'<strong>$1</strong>')
+    .replace(/~~([^~\n]+)~~/g,'<del>$1</del>')
+    .replace(/(?<!\*)\*([^*\n]+)\*(?!\*)/g,'<em>$1</em>');
+   return value.replace(/\u0002(\d+)\u0003/g,(_,i)=>protectedParts[Number(i)]||'');
   }
-  if(inCode)flushCode();flushPara();return html.join('');
- }
+  function md(text){
+   const rows=String(text||'').replace(/\r\n?/g,'\n').split('\n');
+   if(!rows.some(x=>x.trim()))return '';
+   const html=[];let para=[],listType='',quote=[],fenced=false,fenceChar='',code=[];
+   const flushPara=()=>{if(para.length){html.push('<p>'+mdInline(para.join(' '))+'</p>');para=[];}};
+   const closeList=()=>{if(listType){html.push('</'+listType+'>');listType='';}};
+   const flushQuote=()=>{if(quote.length){html.push('<blockquote>'+md(quote.join('\n'))+'</blockquote>');quote=[];}};
+   const closeBlocks=()=>{flushPara();closeList();flushQuote();};
+   const tableCells=(line)=>line.trim().replace(/^\|/,'').replace(/\|$/,'').split('|').map(x=>x.trim());
+   const tableLine=(line)=>/^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+   for(let i=0;i<rows.length;i++){
+    const line=rows[i],t=line.trim();
+    if(fenced){if(new RegExp('^'+(fenceChar==='`'?'`':'~')+'{3,}\\s*$').test(t)){
+      html.push('<pre><code>'+esc(code.join('\n'))+'</code></pre>');code=[];fenced=false;
+     }else code.push(line);continue;}
+    const fence=t.match(/^(`{3,}|~{3,})(?:\s*([\w+.-]+))?\s*$/);
+    if(fence){closeBlocks();fenced=true;fenceChar=fence[1][0];code=[];continue;}
+    if(!t){closeBlocks();continue;}
+    if(/^>\s?/.test(t)){flushPara();closeList();quote.push(t.replace(/^>\s?/,''));continue;}
+    flushQuote();
+    const heading=t.match(/^(#{1,4})\s+(.+)$/);
+    if(heading){flushPara();closeList();const n=Math.max(2,Math.min(heading[1].length,4));html.push('<h'+n+'>'+mdInline(heading[2])+'</h'+n+'>');continue;}
+    if(/^(?:-{3,}|\*{3,}|_{3,})$/.test(t)){closeBlocks();html.push('<hr>');continue;}
+    if(i+1<rows.length && t.includes('|') && tableLine(rows[i+1])){
+      closeBlocks();const headers=tableCells(t);let body=[];i+=2;
+      while(i<rows.length && rows[i].trim().includes('|') && rows[i].trim()){
+       const cells=tableCells(rows[i]);body.push('<tr>'+headers.map((_,j)=>'<td>'+mdInline(cells[j]||'')+'</td>').join('')+'</tr>');i++;
+      }
+      i--;
+      html.push('<div class="md-table-scroll"><table><thead><tr>'+headers.map(x=>'<th>'+mdInline(x)+'</th>').join('')+'</tr></thead><tbody>'+body.join('')+'</tbody></table></div>');continue;
+    }
+    const li=t.match(/^([-*+]\s+|\d+\.\s+)(.+)$/);
+    if(li){flushPara();const type=/^\d/.test(li[1])?'ol':'ul';if(listType!==type){closeList();html.push('<'+type+'>');listType=type;}
+      html.push('<li>'+mdInline(li[2])+'</li>');continue;}
+    closeList();para.push(t);
+   }
+   if(fenced)html.push('<pre><code>'+esc(code.join('\n'))+'</code></pre>');
+   closeBlocks();return html.join('');
+  }
  function sections(p){
-  if(Array.isArray(p.sections))return p.sections.map(s=>[s.id,s.title,s.content,s.kind||'text']);
-  return LEGACY_SECTION_FIELDS.filter(([id])=>String(p[id]||'').trim()).map(([id,title,kind])=>[id,title,p[id],kind]);
+  if(Array.isArray(p.sections))return p.sections.map(s=>[s.id,s.title,s.content,s.kind||'text',s.format||'legacy']);
+  return LEGACY_SECTION_FIELDS.filter(([id])=>String(p[id]||'').trim()).map(([id,title,kind])=>[id,title,p[id],kind,'legacy']);
  }
 
  function renderArticle(){
   const e=find(activeId),container=el('reader');
-  if(!e){container.innerHTML='<article class="article empty"><h2>还没有知识点</h2><button class="tool-btn" data-action="add-point">新增知识点</button></article>';el('topCrumb').textContent='技术手册';return;}
+  if(!e){container.innerHTML='<article class="article empty"><h2>还没有知识点</h2><p class="empty-help">请在左侧子模块的「···」菜单中新增知识点，或在底部新增大模块。</p></article>';el('topCrumb').textContent='技术手册';return;}
   const {m,g,p}=e,parts=sections(p),idx=flatten().findIndex(a=>a.p.id===activeId),all=flatten();
   el('topCrumb').textContent=`${m.title} / ${g.title}`;
   let nav=parts.map(([id,title],i)=>`<a href="#sec-${esc(id)}" class="toc-entry ${i===0?'active':''}" data-target="sec-${esc(id)}"><span class="toc-marker"></span>${esc(title)}</a>`).join('');
-  let body=parts.map(([id,title,v,kind],i)=>{
-   const content=kind==='key'?`<div class="quick-box"><div>${md(v)}</div></div>`:kind==='flow'?`<div class="callout-code">${esc(v).replace(/\n/g,'<br>')}</div>`:`<div class="prose">${md(v)}</div>`;
+  let body=parts.map(([id,title,v,kind,format],i)=>{
+   const content=kind==='key'?`<div class="quick-box prose">${md(v)}</div>`:kind==='flow'&&format!=='markdown'?`<div class="callout-code">${esc(v).replace(/\n/g,'<br>')}</div>`:`<div class="prose">${md(v)}</div>`;
    return `<section class="note-section ${!String(v||'').trim()?'empty-block':''}" id="sec-${esc(id)}"><h2 class="section-heading"><span class="section-no">${String(i+1).padStart(2,'0')}</span><span>${esc(title)}</span></h2>${content}</section>`;
   }).join('');
   const foot=`<div class="footer-nav">${idx>0?`<button class="footer-link" data-action="select-point" data-id="${esc(all[idx-1].p.id)}"><span>← 上一篇</span>${esc(all[idx-1].p.title)}</button>`:'<div style="flex:1"></div>'}${idx<all.length-1?`<button class="footer-link" data-action="select-point" data-id="${esc(all[idx+1].p.id)}"><span>下一篇 →</span>${esc(all[idx+1].p.title)}</button>`:'<div style="flex:1"></div>'}</div>`;
-  container.innerHTML=`<div class="reading-column"><article class="article"><div class="article-top"><div class="article-meta"><span class="category-label">${esc(m.title)}</span><span class="meta-arrow">/</span><span>${esc(g.title)}</span></div><h1>${esc(p.title)}</h1><div class="article-tools"><button class="primary" data-action="edit-point">编辑正文 / 章节</button><button data-action="copy-note">复制正文</button><button data-action="add-point">新增知识点</button></div></div><div class="article-body">${body}${p.project?`<div class="related">关联项目：${esc(p.project)}</div>`:''}</div></article>${foot}</div><aside class="page-toc"><div class="toc-inner"><div class="toc-head">本页章节</div><nav class="toc-items">${nav}</nav></div></aside>`;
+  container.innerHTML=`<div class="reading-column"><article class="article"><div class="article-top"><div class="article-meta"><span class="category-label">${esc(m.title)}</span><span class="meta-arrow">/</span><span>${esc(g.title)}</span></div><h1>${esc(p.title)}</h1><div class="article-tools"><button class="primary" data-action="edit-point">编辑正文 / 章节</button><button data-action="copy-note">复制正文</button></div></div><div class="article-body">${body}${p.project?`<div class="related">关联项目：${esc(p.project)}</div>`:''}</div></article>${foot}</div><aside class="page-toc"><div class="toc-inner"><div class="toc-head">本页章节</div><nav class="toc-items">${nav}</nav></div></aside>`;
   if(parts.length){const observer=new IntersectionObserver((entries)=>{const shown=entries.filter(x=>x.isIntersecting).sort((x,y)=>x.boundingClientRect.top-y.boundingClientRect.top);if(!shown.length)return;const id=shown[0].target.id;container.querySelectorAll('.toc-entry').forEach(a=>a.classList.toggle('active',a.dataset.target===id));},{rootMargin:'-110px 0px -64% 0px',threshold:0});container.querySelectorAll('.note-section').forEach(s=>observer.observe(s));}
  }
  function matches(item){if(!search)return true;const q=search.toLowerCase();return [item.p.title,item.p.summary,item.p.explanation,item.p.callchain,item.p.snippet,item.p.pitfalls,item.p.experiment,item.p.personal,...(item.p.sections||[]).flatMap(s=>[s.title,s.content]),item.m.title,item.g.title].some(x=>String(x||'').toLowerCase().includes(q));}
- function renderTree(){let totalFound=0,html='';for(const m of data.modules){
+ function renderTree(){let totalFound=0,html='';for(const [moduleIndex,m] of data.modules.entries()){
   let modFound=0,groupHTML='';for(const g of m.groups){
    const items=g.points.filter(p=>matches({p,m,g}));if(search&&!items.length)continue;modFound+=items.length;
    const ge=expanded.has(g.id)||!!search;
@@ -349,70 +526,203 @@ body.dark .block-action:hover{background:#2d4058}
   }
   if(search&&!modFound)continue;totalFound+=modFound;
   const isExpanded=expanded.has(m.id)||!!search;
-  html+=`<div class="module-row"><button class="module-main ${isExpanded?'expanded':''}" aria-expanded="${isExpanded}" data-action="toggle-module" data-id="${esc(m.id)}"><span class="mod-icon">${esc((m.icon||m.title[0]).slice(0,2))}</span><span class="mod-title">${esc(m.title)}</span>${ARROW.replace('class="chev-icon"',`class="chev-icon ${isExpanded?'expanded':''}"`)}</button><button class="tree-more" data-action="module-menu" data-id="${esc(m.id)}" title="管理：${esc(m.title)}" aria-label="管理大模块 ${esc(m.title)}">${MORE}</button></div>`;
-  if(isExpanded)html+=`<div class="groups">${groupHTML}<button class="group-trigger" data-action="add-group" data-id="${esc(m.id)}">＋ 添加子模块</button></div>`;
+  html+=`<div class="module-row"><button class="module-main ${isExpanded?'expanded':''}" aria-expanded="${isExpanded}" data-action="toggle-module" data-id="${esc(m.id)}"><span class="mod-icon">${esc(String(moduleIndex+1).padStart(2,'0'))}</span><span class="mod-title">${esc(m.title)}</span>${ARROW.replace('class="chev-icon"',`class="chev-icon ${isExpanded?'expanded':''}"`)}</button><button class="tree-more" data-action="module-menu" data-id="${esc(m.id)}" title="管理：${esc(m.title)}" aria-label="管理大模块 ${esc(m.title)}">${MORE}</button></div>`;
+  if(isExpanded)html+=`<div class="groups">${groupHTML}</div>`;
  }
  if(search&&!totalFound)html='<div class="tree-empty">没有匹配的知识点</div>';
  el('tree').innerHTML=html;
  }
  function render(){renderTree();renderArticle();}
  function expandFor(id){const e=find(id);if(e){expanded.add(e.m.id);expanded.add(e.g.id);}}
- expandFor(activeId);render();try{if(localStorage.getItem(PREF)==='dark')document.body.classList.add('dark');}catch(e){}
+ const VALID_THEMES=['light','dark','system'];
+ // In the Windows shell, settings.json is injected before this script and survives rebuilding the EXE.
+ let themePreference=(()=>{
+  const native=window.ATLAS_NATIVE_PREFS?.theme;
+  if(VALID_THEMES.includes(native))return native;
+  try{const stored=localStorage.getItem(PREF);if(VALID_THEMES.includes(stored))return stored;}catch(e){}
+  return 'light';
+ })();
+ function getThemePreference(){return themePreference;}
+ function applyTheme(preference){const chosen=preference==='system'?(window.matchMedia?.('(prefers-color-scheme: dark)').matches?'dark':'light'):preference;document.body.classList.toggle('dark',chosen==='dark');}
+ async function setThemePreference(value){
+  if(!VALID_THEMES.includes(value))return false;
+  if(window.pywebview?.api?.save_settings){
+   try{
+    const result=await window.pywebview.api.save_settings(JSON.stringify({theme:value}));
+    if(!result?.ok)throw new Error(result?.error||'保存设置失败');
+   }catch(e){notify('主题设置未保存：'+(e?.message||'请重试'));return false;}
+  }
+  themePreference=value;
+  window.ATLAS_NATIVE_PREFS={theme:value};
+  try{localStorage.setItem(PREF,value);}catch(e){if(!window.pywebview?.api?.save_settings)notify('浏览器无法持久保存主题设置');}
+  applyTheme(value);
+  return true;
+ }
+ function settingsEditor(){
+  closeContext();
+  const current=getThemePreference(),layer=el('modalLayer');
+  layer.hidden=false;delete layer.dataset.dirty;
+  layer.innerHTML=`<div class="modal settings-modal" role="dialog" aria-modal="true" aria-label="设置"><div class="modal-header"><h2>设置</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="themeSettingsForm"><div class="fields"><div class="settings-note">设置启动时的默认主题。Windows 桌面版将设置保存在 EXE 旁的 data/settings.json，下次打开仍会生效。</div><div class="settings-theme-options" role="radiogroup" aria-label="程序启动默认主题">${[['light','浅色主题','明亮的阅读背景'],['dark','深色主题','适合低光环境'],['system','跟随系统','根据系统外观自动切换']].map(([value,label,desc])=>`<label class="settings-theme-option"><input type="radio" name="startupTheme" value="${value}" ${current===value?'checked':''}><span><strong>${label}</strong><small>${desc}</small></span></label>`).join('')}</div></div><div class="modal-footer"><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存设置</button></div></div></form></div>`;
+  const form=el('themeSettingsForm');
+  form.addEventListener('submit',async ev=>{
+   ev.preventDefault();const button=form.querySelector('button[type="submit"]');button.disabled=true;
+   const value=new FormData(form).get('startupTheme');
+   const ok=await setThemePreference(value);
+   if(ok){closeModal(true);notify('主题设置已保存，下次启动将继续生效');}
+   else button.disabled=false;
+  });
+  layer.onclick=ev=>{if(ev.target===layer)closeModal();};
+ }
+
+ expandFor(activeId);render();applyTheme(getThemePreference());
+ if(window.matchMedia){const media=window.matchMedia('(prefers-color-scheme: dark)');const onSystemChange=()=>{if(getThemePreference()==='system')applyTheme('system');};if(media.addEventListener)media.addEventListener('change',onSystemChange);else if(media.addListener)media.addListener(onSystemChange);}
  function navigate(id){if(!find(id))return;activeId=id;expanded=new Set();expandFor(id);render();const current=el('tree').querySelector('.point-link.active');current?.scrollIntoView({block:'nearest',behavior:'instant'});el('sidebar').classList.remove('open');el('overlay').hidden=true;window.scrollTo({top:0,behavior:'instant'});}
- function closeModal(){el('modalLayer').hidden=true;el('modalLayer').innerHTML='';}
+ function closeModal(force=false){const layer=el('modalLayer');if(!force&&!layer.hidden&&layer.dataset.dirty==='true'&&!confirm('当前笔记有未保存的修改，确定放弃吗？'))return;layer.hidden=true;layer.innerHTML='';delete layer.dataset.dirty;}
  const field=(name,title,value='',type='input',wide=false,opts=[])=>`<div class="field ${wide?'wide':''}"><label for="f-${name}">${esc(title)}</label>${type==='textarea'?`<textarea name="${name}" id="f-${name}" rows="${name==='explanation'?9:name==='snippet'?6:3}">${esc(value)}</textarea>`:type==='select'?`<select name="${name}" id="f-${name}">${opts.map(a=>`<option value="${esc(a[0])}" ${String(value)===String(a[0])?'selected':''}>${esc(a[1])}</option>`).join('')}</select>`:`<input id="f-${name}" name="${name}" value="${esc(value)}" ${name==='title'?'required':''}/>`}</div>`;
  function modal(title,fields,onSave,opts={}){
-  const box=el('modalLayer');box.hidden=false;
-  box.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modal-header"><h2>${esc(title)}</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="editForm"><div class="fields">${fields}</div><div class="modal-footer"><div>${opts.canDelete?'<button class="danger" type="button" data-action="delete-current">删除此项</button>':''}</div><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存内容</button></div></div></form></div>`;
-  const form=el('editForm');form.addEventListener('submit',ev=>{ev.preventDefault();const values=Object.fromEntries(new FormData(form));try{onSave(values);closeModal();persist();render();notify('已保存');}catch(err){notify('保存失败：'+err.message);}});
+  const box=el('modalLayer');box.hidden=false;delete box.dataset.dirty;
+  box.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}"><div class="modal-header"><h2>${esc(title)}</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="editForm"><div class="fields">${fields}</div><div class="modal-footer"><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存内容</button></div></div></form></div>`;
+  const form=el('editForm');form.addEventListener('submit',ev=>{ev.preventDefault();const values=Object.fromEntries(new FormData(form));try{onSave(values);closeModal(true);persist();render();notify('已保存');}catch(err){notify('保存失败：'+err.message);}});
   box.onclick=ev=>{if(ev.target===box)closeModal();};
   const input=form.querySelector('input');if(input)input.focus();
  }
- let deletionHandler=null;
  function pointEditor(create=false,modId='',groupId=''){
   closeContext();
   const existing=find(activeId),m=getModule(modId)||existing?.m||data.modules[0];if(!m)return notify('请先创建大模块');
   const g=getGroup(m,groupId)||(existing?.m.id===m.id?existing.g:null)||m.groups[0];if(!g)return notify('请先创建子模块');
   const old=create?null:existing;if(!create&&!old)return;
   const p=create?{id:'',title:'',project:'',sections:[]}:copy(old.p);
-  let draft=sections(p).map(([id,title,content,kind])=>({id,title,content:content||'',kind:kind||'text'}));
+  let draft=sections(p).map(([id,title,content,kind,format])=>({id,title,content:content||'',kind:kind||'text',format:format||'legacy'}));
   const moduleOpts=data.modules.map(a=>[a.id,a.title]);const groupOpts=(create?m:old.m).groups.map(b=>[(create?m:old.m).id+'::'+b.id,b.title]);
-  const box=el('modalLayer');box.hidden=false;
+  const box=el('modalLayer');box.hidden=false;delete box.dataset.dirty;
   box.innerHTML=`<div class="modal article-edit-modal" role="dialog" aria-modal="true" aria-label="${create?'新增知识点':'编辑知识点'}"><div class="modal-header"><h2>${create?'新增知识点':'编辑知识点'}</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="articleForm"><div class="fields">${field('title','知识点名称',p.title,'input',true)}${field('moduleId','所属大模块',create?m.id:old.m.id,'select',false,moduleOpts)}${field('groupId','所属子模块',(create?m:old.m).id+'::'+(create?g:old.g).id,'select',false,groupOpts)}${field('project','关联项目（可选）',p.project||'','input',true)}</div><div class="block-editor-bar"><h3>正文章节</h3><button class="block-add-btn" type="button" id="addBlock">＋ 新增章节</button></div><div id="blockEditor" class="block-editor"></div><div class="modal-footer"><div>${create?'':'<button class="danger" type="button" id="deletePoint">删除知识点</button>'}</div><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">保存</button></div></div></form></div>`;
-  const form=el('articleForm'),list=el('blockEditor');let openId=draft[0]?.id||'';
-  function pull(){draft=[...list.querySelectorAll('.editor-block')].map(card=>({id:card.dataset.sid,title:card.querySelector('.editor-title').value,kind:card.querySelector('.editor-kind').value,content:card.querySelector('textarea').value}));}
-  function paint(){list.innerHTML=draft.map((s,i)=>`<div class="editor-block" data-sid="${esc(s.id)}"><div class="editor-block-head"><span class="editor-index">${String(i+1).padStart(2,'0')}</span><input class="editor-title" aria-label="章节名称" value="${esc(s.title)}"/><select class="editor-kind" aria-label="章节类型">${SECTION_TYPES.map(([k,l])=>`<option value="${k}" ${s.kind===k?'selected':''}>${l}</option>`).join('')}</select><button class="block-action" type="button" data-block-action="up" title="上移" ${i===0?'disabled':''}>↑</button><button class="block-action" type="button" data-block-action="down" title="下移" ${i===draft.length-1?'disabled':''}>↓</button><button class="block-action danger" type="button" data-block-action="remove" title="删除章节">×</button><button class="block-action" type="button" data-block-action="toggle" title="展开或收起">${s.id===openId?'−':'+'}</button></div><div class="editor-body" ${s.id===openId?'':'hidden'}><textarea aria-label="章节正文" spellcheck="false">${esc(s.content)}</textarea></div></div>`).join('');}
+   const form=el('articleForm'),list=el('blockEditor');let openId=draft[0]?.id||'';
+  const previewIds=new Set();
+  const markDirty=()=>{box.dataset.dirty='true';};
+  const fmtButtons=[['h2','H2','二级标题'],['h3','H3','三级标题'],['bold','B','加粗（Ctrl+B）'],['italic','I','斜体（Ctrl+I）'],['inline','</>','行内代码'],['code','{ }','代码块'],['quote','❝','引用'],['list','☷','无序列表'],['link','↗','链接']];
+  function pull(){draft=[...list.querySelectorAll('.editor-block')].map(card=>({id:card.dataset.sid,title:card.querySelector('.editor-title').value,kind:card.querySelector('.editor-kind').value,format:card.dataset.format||'markdown',content:card.querySelector('textarea.md-source').value}));}
+  function paint(){list.innerHTML=draft.map((s,i)=>`<div class="editor-block" data-sid="${esc(s.id)}" data-format="${esc(s.format||'legacy')}"><div class="editor-block-head"><span class="editor-index">${String(i+1).padStart(2,'0')}</span><input class="editor-title" aria-label="章节名称" value="${esc(s.title)}"/><select class="editor-kind" aria-label="章节外观（不限制正文内格式）">${SECTION_TYPES.map(([k,l])=>`<option value="${k}" ${s.kind===k?'selected':''}>${l}</option>`).join('')}</select><button class="block-action" type="button" data-block-action="up" title="上移" ${i===0?'disabled':''}>↑</button><button class="block-action" type="button" data-block-action="down" title="下移" ${i===draft.length-1?'disabled':''}>↓</button><button class="block-action danger" type="button" data-block-action="remove" title="删除章节">×</button><button class="block-action" type="button" data-block-action="toggle" title="展开或收起">${s.id===openId?'−':'+'}</button></div><div class="editor-body" ${s.id===openId?'':'hidden'}><div class="md-toolbar" role="toolbar" aria-label="Markdown正文格式">${fmtButtons.map(([key,label,hint])=>`<button type="button" data-md-action="${key}" title="${hint}">${esc(label)}</button>`).join('')}<span class="md-separator"></span><button type="button" data-md-action="preview" class="${previewIds.has(s.id)?'active':''}">◉ 预览</button><span class="md-guide">选中文字再点格式按钮；支持直接输入 Markdown</span></div><textarea class="md-source" aria-label="章节正文（Markdown）" spellcheck="false" placeholder="输入正文，支持 ## 标题、**加粗**、\`代码\`、代码块等…">${esc(s.content)}</textarea><div class="editor-help">Ctrl+B 加粗 · Ctrl+I 斜体 · Tab 插入缩进 · 章节类型只影响外观，正文可混排标题、强调和代码。</div><div class="md-preview-wrap" ${previewIds.has(s.id)?'':'hidden'}><div class="md-preview-head">实时阅读预览（原文不会被修改）</div><div class="md-preview"><div class="prose">${md(s.content)||'<span class="md-preview-empty">尚无正文</span>'}</div></div></div></div></div>`).join('');}
+  function modifySelection(textarea,action){
+    const val=textarea.value,a=textarea.selectionStart,b=textarea.selectionEnd,sel=val.slice(a,b);
+    let from=a,to=b,insert='',posA=a,posB=b;
+    if(action==='indent'){insert='    ';posA=posB=a+4;}else if(['h2','h3','quote','list'].includes(action)){
+      from=val.lastIndexOf('\n',Math.max(a-1,0))+1;
+      if(a===0)from=0;
+      const end=val.indexOf('\n',b);to=end<0?val.length:end;
+      const prefix={h2:'## ',h3:'### ',quote:'> ',list:'- '}[action];
+      const segment=val.slice(from,to);
+      insert=segment.split('\n').map(line=>line.startsWith(prefix)?line:prefix+line).join('\n');
+      posA=from;posB=from+insert.length;
+    }else if(action==='code'){
+      insert='\n```c\n'+(sel||'// 在这里输入代码')+'\n```\n';posA=a+6;posB=a+6+(sel||'// 在这里输入代码').length;
+    }else if(action==='link'){
+      insert='['+(sel||'链接文字')+'](https://example.com)';posA=a+1;posB=a+1+(sel||'链接文字').length;
+    }else{
+      const wrap={bold:'**',italic:'*',inline:'`'}[action];
+      if(!wrap)return;
+      insert=wrap+(sel||({bold:'重点内容',italic:'强调内容',inline:'code'}[action]))+wrap;
+      posA=a+wrap.length;posB=posA+(sel||({bold:'重点内容',italic:'强调内容',inline:'code'}[action])).length;
+    }
+    textarea.setRangeText(insert,from,to,'end');textarea.focus();textarea.setSelectionRange(posA,posB);
+    textarea.dispatchEvent(new Event('input',{bubbles:true}));
+  }
   paint();
-  el('addBlock').addEventListener('click',()=>{pull();const id=uid('section');draft.push({id,title:'新章节',kind:'text',content:''});openId=id;paint();list.lastElementChild?.scrollIntoView({block:'nearest'});list.lastElementChild?.querySelector('.editor-title')?.focus();});
-  list.addEventListener('click',ev=>{const b=ev.target.closest('[data-block-action]');if(!b)return;pull();const id=b.closest('.editor-block').dataset.sid,i=draft.findIndex(x=>x.id===id);if(i<0)return;const action=b.dataset.blockAction;
-   if(action==='remove'){if(!confirm(`确定删除章节「${draft[i].title}」？`))return;draft.splice(i,1);if(openId===id)openId=draft[Math.min(i,draft.length-1)]?.id||'';}
-   if(action==='up'&&i>0)[draft[i-1],draft[i]]=[draft[i],draft[i-1]];
-   if(action==='down'&&i<draft.length-1)[draft[i+1],draft[i]]=[draft[i],draft[i+1]];
+  el('addBlock').addEventListener('click',()=>{pull();const id=uid('section');draft.push({id,title:'新章节',kind:'text',content:'',format:'markdown'});openId=id;markDirty();paint();list.lastElementChild?.scrollIntoView({block:'nearest'});list.lastElementChild?.querySelector('.editor-title')?.focus();});
+  list.addEventListener('input',ev=>{markDirty();const card=ev.target.closest('.editor-block');if(!card)return;if(ev.target.matches('textarea.md-source')){
+    card.dataset.format='markdown';const out=card.querySelector('.md-preview .prose');if(out)out.innerHTML=md(ev.target.value)||'<span class="md-preview-empty">尚无正文</span>';
+  }});
+  list.addEventListener('change',markDirty);
+  form.addEventListener('input',markDirty);
+  list.addEventListener('click',ev=>{
+   const mdBtn=ev.target.closest('[data-md-action]');if(mdBtn){
+    const card=mdBtn.closest('.editor-block');if(!card)return;const id=card.dataset.sid,action=mdBtn.dataset.mdAction;
+    if(action==='preview'){if(previewIds.has(id))previewIds.delete(id);else previewIds.add(id);
+      const target=card.querySelector('.md-preview-wrap');target.hidden=!previewIds.has(id);mdBtn.classList.toggle('active',previewIds.has(id));
+      if(!target.hidden){target.querySelector('.prose').innerHTML=md(card.querySelector('.md-source').value)||'<span class="md-preview-empty">尚无正文</span>';target.scrollIntoView({block:'nearest'});}
+    }else modifySelection(card.querySelector('textarea.md-source'),action);
+    return;
+   }
+   const b=ev.target.closest('[data-block-action]');if(!b)return;pull();const id=b.closest('.editor-block').dataset.sid,i=draft.findIndex(x=>x.id===id);if(i<0)return;const action=b.dataset.blockAction;
+   if(action==='remove'){if(!confirm(`确定删除章节「${draft[i].title}」？`))return;draft.splice(i,1);previewIds.delete(id);if(openId===id)openId=draft[Math.min(i,draft.length-1)]?.id||'';markDirty();}
+   if(action==='up'&&i>0){[draft[i-1],draft[i]]=[draft[i],draft[i-1]];markDirty();}
+   if(action==='down'&&i<draft.length-1){[draft[i+1],draft[i]]=[draft[i],draft[i+1]];markDirty();}
    if(action==='toggle')openId=openId===id?'':id;
    paint();
   });
-  const ms=el('f-moduleId'),gs=el('f-groupId');ms.addEventListener('change',()=>{const mod=getModule(ms.value);gs.innerHTML=(mod?.groups||[]).map(x=>`<option value="${esc(mod.id+'::'+x.id)}">${esc(x.title)}</option>`).join('');});
+  list.addEventListener('keydown',ev=>{
+   if(!ev.target.matches('textarea.md-source'))return;
+   if(ev.key==='Tab'){ev.preventDefault();modifySelection(ev.target,'indent');return;}
+   if((ev.ctrlKey||ev.metaKey)&&['b','i'].includes(ev.key.toLowerCase())){ev.preventDefault();modifySelection(ev.target,ev.key.toLowerCase()==='b'?'bold':'italic');}
+  });
+ const ms=el('f-moduleId'),gs=el('f-groupId');ms.addEventListener('change',()=>{const mod=getModule(ms.value);gs.innerHTML=(mod?.groups||[]).map(x=>`<option value="${esc(mod.id+'::'+x.id)}">${esc(x.title)}</option>`).join('');});
   form.addEventListener('submit',ev=>{ev.preventDefault();pull();const v=Object.fromEntries(new FormData(form));if(!v.title?.trim())return notify('知识点名称不能为空');if(draft.some(s=>!s.title.trim()))return notify('章节名称不能为空');
    const part=v.groupId?.split('::')||[],dest=getModule(part[0]),target=getGroup(dest,part[1]);if(!dest||!target||dest.id!==v.moduleId)return notify('请选择有效的子模块');
    const clean={...p,id:create?uid('p'):p.id,title:v.title.trim(),project:v.project||'',sections:draft.map(s=>({...s,title:s.title.trim()}))};
-   if(!create){const prev=find(p.id);if(prev){const pos=prev.g.points.findIndex(x=>x.id===p.id);prev.g.points.splice(pos,1);if(prev.g===target)target.points.splice(pos,0,clean);else target.points.push(clean);}}else target.points.push(clean);activeId=clean.id;expanded.add(dest.id);expanded.add(target.id);search='';el('search').value='';closeModal();persist();render();notify('已保存');
+   if(!create){const prev=find(p.id);if(prev){const pos=prev.g.points.findIndex(x=>x.id===p.id);prev.g.points.splice(pos,1);if(prev.g===target)target.points.splice(pos,0,clean);else target.points.push(clean);}}else target.points.push(clean);activeId=clean.id;expanded.add(dest.id);expanded.add(target.id);search='';el('search').value='';closeModal(true);persist();render();notify('已保存');
   });
-  if(!create)el('deletePoint').addEventListener('click',()=>{if(!confirm(`确定删除知识点「${p.title}」？`))return;const prev=find(p.id);if(prev)prev.g.points=prev.g.points.filter(x=>x.id!==p.id);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();notify('已删除');});
+  if(!create)el('deletePoint').addEventListener('click',()=>{if(!confirm(`确定删除知识点「${p.title}」？`))return;const prev=find(p.id);if(prev)prev.g.points=prev.g.points.filter(x=>x.id!==p.id);activeId=flatten()[0]?.p.id||'';closeModal(true);persist();render();notify('已删除');});
   box.onclick=ev=>{if(ev.target===box)closeModal();};
   el('f-title').focus();
  }
  function moduleEditor(id=''){
-  const old=getModule(id),p=old||{title:'',subtitle:'',icon:''};
-  deletionHandler=old?()=>{if(!confirm(`确定删除「${old.title}」和下面所有知识点？此操作不可撤销。`))return;data.modules=data.modules.filter(x=>x.id!==id);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();}:null;
-  modal(old?'编辑大模块':'新增大模块',[field('title','大模块名称',p.title,'input',true),field('subtitle','描述（可选）',p.subtitle,'input',true),field('icon','目录标记（1-2字）',p.icon,'input')].join(''),v=>{
-   if(!v.title.trim())throw Error('名称不能为空');if(old)Object.assign(old,{title:v.title.trim(),subtitle:v.subtitle,icon:(v.icon||v.title[0]).slice(0,2)});
-   else {const nm={id:uid('m'),title:v.title.trim(),subtitle:v.subtitle,icon:(v.icon||v.title[0]).slice(0,2),groups:[]};data.modules.push(nm);expanded.add(nm.id);}
-  },{canDelete:!!old});
+  const old=getModule(id),p=old||{title:'',subtitle:''};
+  modal(old?'编辑大模块':'新增大模块',[field('title','大模块名称',p.title,'input',true),field('subtitle','描述（可选）',p.subtitle,'input',true)].join(''),v=>{
+   if(!v.title.trim())throw Error('名称不能为空');if(old)Object.assign(old,{title:v.title.trim(),subtitle:v.subtitle});
+   else {const nm={id:uid('m'),title:v.title.trim(),subtitle:v.subtitle,groups:[]};data.modules.push(nm);expanded.add(nm.id);}
+  });
  }
  function groupEditor(mid,gid=''){
   const m=getModule(mid);if(!m)return;const g=getGroup(m,gid),obj=g||{title:''};
-  deletionHandler=g?()=>{if(!confirm(`确定删除子模块「${g.title}」及其中所有知识点？`))return;m.groups=m.groups.filter(x=>x.id!==gid);activeId=flatten()[0]?.p.id||'';closeModal();persist();render();}:null;
-  modal(g?'编辑子模块':'新增子模块',field('title','子模块名称',obj.title,'input',true),v=>{if(!v.title.trim())throw Error('名称不能为空');if(g)g.title=v.title.trim();else{const ng={id:uid('g'),title:v.title.trim(),points:[]};m.groups.push(ng);expanded.add(m.id);expanded.add(ng.id);}},{canDelete:!!g});
+  modal(g?'编辑子模块':'新增子模块',field('title','子模块名称',obj.title,'input',true),v=>{if(!v.title.trim())throw Error('名称不能为空');if(g)g.title=v.title.trim();else{const ng={id:uid('g'),title:v.title.trim(),points:[]};m.groups.push(ng);expanded.add(m.id);expanded.add(ng.id);}});
+ }
+ function mergeGroupEditor(mid,sourceId){
+  closeContext();
+  const m=getModule(mid),source=getGroup(m,sourceId);
+  if(!m||!source)return notify('未找到要合并的子模块');
+  const candidates=m.groups.filter(g=>g.id!==sourceId);
+  if(!candidates.length)return notify('当前大模块只有一个子模块，无法合并');
+  const layer=el('modalLayer');layer.hidden=false;delete layer.dataset.dirty;
+  const selected=candidates[0];
+  const fields=`<div class="merge-overview"><strong>来源子模块：</strong>${esc(source.title)}（${source.points.length} 个知识点）<br><span class="merge-hint">仅合并「${esc(m.title)}」中的子模块；所有知识点及其独立正文章节将原样保留。</span></div>
+    ${field('mergeTarget','选择要合并到的子模块',selected.id,'select',true,candidates.map(g=>[g.id,g.title+'（'+g.points.length+' 个知识点）']))}
+    ${field('mergeTitle','合并后的子模块名称',selected.title,'input',true)}
+    <div id="mergePreview" class="merge-overview" aria-live="polite"></div>
+    <div class="merge-hint warn">合并后保留目标子模块，移除来源子模块。合并仅整理目录，不会删除、覆盖知识点正文；同名知识点也会全部保留。建议先导出 JSON 备份。</div>`;
+  layer.innerHTML=`<div class="modal merge-modal" role="dialog" aria-modal="true" aria-label="合并子模块"><div class="modal-header"><h2>合并子模块</h2><button type="button" data-action="close-modal" aria-label="关闭">×</button></div><form id="mergeGroupForm"><div class="fields">${fields}</div><div class="modal-footer"><button type="button" id="mergeBackup" class="merge-backup">导出当前备份</button><div class="right"><button type="button" data-action="close-modal">取消</button><button class="solid" type="submit">确认合并</button></div></div></form></div>`;
+  const form=el('mergeGroupForm'),targetSelect=el('f-mergeTarget'),titleInput=el('f-mergeTitle'),preview=el('mergePreview');
+  titleInput.required=true;
+  function updatePreview(){
+   const target=getGroup(m,targetSelect.value);if(!target)return;
+   const titles=new Set(target.points.map(p=>p.title.trim()));
+   const duplicates=source.points.filter(p=>titles.has(p.title.trim())).map(p=>p.title.trim());
+   preview.innerHTML=`<strong>合并结果预览</strong><br>${esc(target.title)}：${target.points.length} 个　+　${esc(source.title)}：${source.points.length} 个<br>合计：<strong>${target.points.length+source.points.length} 个知识点</strong>${duplicates.length?`<br><span class="merge-hint warn">检测到 ${duplicates.length} 个同名知识点，将完整保留两份：${esc(duplicates.slice(0,3).join('、'))}${duplicates.length>3?'…':''}</span>`:''}`;
+  }
+  targetSelect.addEventListener('change',()=>{const next=getGroup(m,targetSelect.value);if(next)titleInput.value=next.title;updatePreview();});
+  updatePreview();
+  form.addEventListener('input',()=>{layer.dataset.dirty='true';});
+  form.addEventListener('submit',ev=>{
+   ev.preventDefault();
+   const target=getGroup(m,targetSelect.value),newTitle=titleInput.value.trim();
+   if(!source||!target||source.id===target.id)return notify('请选择两个不同的有效子模块');
+   if(!newTitle)return notify('请填写合并后的子模块名称');
+   if(m.groups.some(g=>g.id!==source.id&&g.id!==target.id&&g.title.trim()===newTitle))return notify('合并名称与另一个子模块重复，请重新命名');
+   const pointIds=new Set(target.points.map(p=>p.id));
+   if(source.points.some(p=>pointIds.has(p.id)))return notify('两个子模块存在相同的知识点ID，为避免覆盖已取消合并');
+   const names=new Set(target.points.map(p=>p.title.trim()));
+   const duplicateCount=source.points.filter(p=>names.has(p.title.trim())).length;
+   const total=target.points.length+source.points.length;
+   const details=`确定把「${source.title}」合并到「${target.title}」吗？\n\n合并后名称：${newTitle}\n保留的知识点：${total} 个${duplicateCount?'\n其中同名知识点：'+duplicateCount+' 个（全部保留）':''}\n\n来源子模块目录将被移除，但其知识点、正文和ID均保留。建议提前备份。`;
+   if(!confirm(details))return;
+   // 操作仅移动已有知识点对象，不修改各知识点及正文数据；保留目标子模块ID。
+   target.points.push(...source.points);
+   target.title=newTitle;
+   m.groups=m.groups.filter(g=>g.id!==source.id);
+   expanded.delete(source.id);expanded.add(m.id);expanded.add(target.id);
+   closeModal(true);persist();render();notify(`已合并：${total} 个知识点全部保留`);
+  });
+  el('mergeBackup').addEventListener('click',exportData);
+  layer.onclick=ev=>{if(ev.target===layer)closeModal();};
+  titleInput.focus();titleInput.select();
  }
  function exportData(){
    if(window.pywebview?.api?.export_data){window.pywebview.api.export_data(JSON.stringify(data,null,2)).then(result=>{if(result?.ok)notify('备份已保存：'+result.path);else if(result&&!result.cancelled)notify('备份失败：'+(result.error||'未知错误'));}).catch(()=>notify('备份失败'));return;}
@@ -420,30 +730,58 @@ body.dark .block-action:hover{background:#2d4058}
  function importData(file){if(!file)return;const reader=new FileReader();reader.onload=()=>{try{const obj=migrate(JSON.parse(reader.result));if(!confirm('导入会覆盖当前浏览器内的数据，建议先导出备份。确定继续吗？'))return;data=obj;activeId=flatten()[0]?.p.id||'';expanded=new Set();expandFor(activeId);search='';el('search').value='';persist();render();notify('导入成功');}catch(e){notify('导入失败：'+e.message);}finally{el('fileIn').value='';}};reader.onerror=()=>notify('文件读取失败');reader.readAsText(file,'utf-8');}
  function closeContext(){el('contextMenu').hidden=true;el('contextMenu').innerHTML='';}
  function openContext(button,entries){const menu=el('contextMenu');if(!menu.hidden && menu.dataset.owner===button.dataset.action+'|'+(button.dataset.gid||button.dataset.id)){closeContext();return;}
-  menu.dataset.owner=button.dataset.action+'|'+(button.dataset.gid||button.dataset.id);menu.innerHTML=entries.map(x=>x==='-'?'<div class="context-divider"></div>':`<button type="button" data-action="${esc(x[0])}" ${x[2]||''}>${esc(x[1])}</button>`).join('');menu.hidden=false;
-  const rect=button.getBoundingClientRect(),mw=180;menu.style.top=Math.min(rect.bottom+5,window.innerHeight-entries.length*43-20)+'px';menu.style.left=Math.min(rect.left,window.innerWidth-mw-12)+'px';
+  menu.dataset.owner=button.dataset.action+'|'+(button.dataset.gid||button.dataset.id);menu.innerHTML=entries.map(x=>x==='-'?'<div class="context-divider"></div>':`<button type="button" class="${x[0].startsWith('delete-')?'context-danger':''}" data-action="${esc(x[0])}" ${x[2]||''}>${esc(x[1])}</button>`).join('');menu.hidden=false;
+  const rect=button.getBoundingClientRect(),mw=180;const mh=menu.getBoundingClientRect().height;const below=rect.bottom+5;menu.style.top=Math.max(8,below+mh<=window.innerHeight-8?below:rect.top-mh-5)+'px';menu.style.left=Math.max(8,Math.min(rect.left,window.innerWidth-mw-12))+'px';
  }
  async function copyArticle(){const e=find(activeId);if(!e)return;const p=e.p;const parts=sections(p).map(([id,t,v])=>`## ${t}\n\n${v||''}`).join('\n\n');const plain=`# ${p.title}\n\n${parts}`;try{await navigator.clipboard.writeText(plain);notify('完整笔记已复制');}catch(ex){const t=document.createElement('textarea');document.body.appendChild(t);t.value=plain;t.select();try{document.execCommand('copy');notify('完整笔记已复制');}catch(e){notify('当前浏览器不允许复制，请手动选择文本');}t.remove();}}
  document.addEventListener('click',ev=>{if(!ev.target.closest('#contextMenu')&&!ev.target.closest('.tree-more'))closeContext();const b=ev.target.closest('[data-action]');if(!b)return;const ac=b.dataset.action;
-  if(ac==='module-menu'){const id=b.dataset.id;openContext(b,[['edit-module','重命名 / 编辑',`data-id="${esc(id)}"`],['add-group','新增子模块',`data-id="${esc(id)}"`]]);return;}
-  if(ac==='group-menu'){const mid=b.dataset.mid,gid=b.dataset.gid;openContext(b,[['edit-group','重命名 / 编辑',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`],['add-point','新增知识点',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`]]);return;}
+  if(ac==='module-menu'){
+   const id=b.dataset.id,index=data.modules.findIndex(m=>m.id===id);
+   const entries=[['edit-module','重命名 / 编辑',`data-id="${esc(id)}"`],['add-group','新增子模块',`data-id="${esc(id)}"`]];
+   if(index>0)entries.push(['move-module-up','↑ 上移一位',`data-id="${esc(id)}"`]);
+   if(index>=0&&index<data.modules.length-1)entries.push(['move-module-down','↓ 下移一位',`data-id="${esc(id)}"`]);
+   entries.push('-',['delete-module','删除大模块',`data-id="${esc(id)}"`]);
+   openContext(b,entries);return;
+  }
+  if(ac==='group-menu'){const mid=b.dataset.mid,gid=b.dataset.gid;openContext(b,[['edit-group','重命名 / 编辑',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`],['add-point','新增知识点',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`],['merge-group','合并子模块',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`],'-',['delete-group','删除子模块',`data-mid="${esc(mid)}" data-gid="${esc(gid)}"`]]);return;}
   if(b.closest('#contextMenu'))closeContext();
   if(ac==='select-point'){navigate(b.dataset.id);return;}
   if(ac==='toggle-module'){const id=b.dataset.id;if(expanded.has(id))expanded.delete(id);else expanded.add(id);renderTree();return;}
   if(ac==='toggle-group'){const id=b.dataset.gid;if(expanded.has(id))expanded.delete(id);else expanded.add(id);renderTree();return;}
   if(ac==='toggle-menu'){el('sidebar').classList.toggle('open');el('overlay').hidden=!el('sidebar').classList.contains('open');return;}
   if(ac==='menu-close'){el('sidebar').classList.remove('open');el('overlay').hidden=true;return;}
-  if(ac==='theme'){document.body.classList.toggle('dark');try{localStorage.setItem(PREF,document.body.classList.contains('dark')?'dark':'light');}catch(e){}return;}
+  if(ac==='theme'){setThemePreference(document.body.classList.contains('dark')?'light':'dark');return;}
+  if(ac==='settings'){settingsEditor();return;}
   if(ac==='edit-point'){pointEditor();return;}if(ac==='add-point'){pointEditor(true,b.dataset.mid||'',b.dataset.gid||'');return;}
+  if(ac==='move-module-up'||ac==='move-module-down'){
+   const index=data.modules.findIndex(m=>m.id===b.dataset.id),step=ac==='move-module-up'?-1:1;
+   if(index<0||index+step<0||index+step>=data.modules.length)return;
+   const [m]=data.modules.splice(index,1);data.modules.splice(index+step,0,m);
+   persist();render();notify('大模块顺序已调整，编号自动更新');return;
+  }
   if(ac==='add-module'){moduleEditor();return;}if(ac==='edit-module'){moduleEditor(b.dataset.id);return;}
   if(ac==='add-group'){groupEditor(b.dataset.id);return;}if(ac==='edit-group'){groupEditor(b.dataset.mid,b.dataset.gid);return;}
+  if(ac==='merge-group'){mergeGroupEditor(b.dataset.mid,b.dataset.gid);return;}
+  if(ac==='delete-module'){
+   const m=getModule(b.dataset.id);if(!m)return;
+   const count=m.groups.reduce((n,g)=>n+g.points.length,0);
+   if(!confirm(`确定删除大模块「${m.title}」以及下属 ${m.groups.length} 个子模块、${count} 个知识点？\n删除后会同步保存，请确认已备份重要内容。`))return;
+   data.modules=data.modules.filter(x=>x.id!==m.id);if(!find(activeId))activeId=flatten()[0]?.p.id||'';
+   expanded.delete(m.id);persist();render();notify('大模块已删除');return;
+  }
+  if(ac==='delete-group'){
+   const m=getModule(b.dataset.mid),g=getGroup(m,b.dataset.gid);if(!m||!g)return;
+   if(!confirm(`确定删除子模块「${g.title}」以及其中 ${g.points.length} 个知识点？\n删除后会同步保存，请确认已备份重要内容。`))return;
+   m.groups=m.groups.filter(x=>x.id!==g.id);if(!find(activeId))activeId=flatten()[0]?.p.id||'';
+   expanded.delete(g.id);persist();render();notify('子模块已删除');return;
+  }
   if(ac==='export'){exportData();return;}if(ac==='import'){el('fileIn').click();return;}if(ac==='copy-note'){copyArticle();return;}
-  if(ac==='close-modal'){closeModal();return;}if(ac==='delete-current'){deletionHandler?.();return;}
+  if(ac==='close-modal'){closeModal();return;}
  });
- document.addEventListener('pywebviewready',()=>{if(window.pywebview?.api?.save_data)window.pywebview.api.save_data(JSON.stringify(data)).catch(()=>{});});
+ // Read-only on startup: never overwrite a valid disk copy until the user explicitly edits/imports.
  el('search').addEventListener('input',e=>{search=e.target.value.trim();if(search){const first=flatten().find(matches);if(first)activeId=first.p.id;}render();});
  el('fileIn').addEventListener('change',e=>importData(e.target.files[0]));
- document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();el('search').focus();}if(e.key==='Escape'){closeModal();el('sidebar').classList.remove('open');el('overlay').hidden=true;}});
+ document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();el('search').focus();}if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&!el('modalLayer').hidden){e.preventDefault();document.querySelector('#articleForm')?.requestSubmit();}if(e.key==='Escape'){closeModal();el('sidebar').classList.remove('open');el('overlay').hidden=true;}});
 })();
 </script>
 </body></html>

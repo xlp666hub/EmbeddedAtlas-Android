@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.AtomicFile;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.webkit.JavascriptInterface;
@@ -23,8 +22,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -47,12 +46,16 @@ public class MainActivity extends Activity {
     private String pendingExportToken;
     private File notesFile;
     private File previousFile;
+    private File settingsFile;
+    private File settingsPreviousFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         notesFile = new File(getFilesDir(), "notes.json");
         previousFile = new File(getFilesDir(), "notes.previous.json");
+        settingsFile = new File(getFilesDir(), "settings.json");
+        settingsPreviousFile = new File(getFilesDir(), "settings.previous.json");
 
         FrameLayout root = new FrameLayout(this);
         root.setLayoutParams(new ViewGroup.LayoutParams(-1, -1));
@@ -81,12 +84,16 @@ public class MainActivity extends Activity {
         webView.addJavascriptInterface(new AtlasBridge(), "AtlasAndroid");
 
         webView.setWebViewClient(new WebViewClient() {
-            @Override public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, android.webkit.WebResourceRequest request) {
                 Uri uri = request.getUrl();
-                if (uri.toString().startsWith(BASE_URL)) return false;
-                // Do not navigate the trusted app WebView to arbitrary websites: the JS bridge
-                // must remain available only to our own bundled HTML.
-                try { startActivity(new Intent(Intent.ACTION_VIEW, uri)); } catch (Exception ignored) { }
+                if ("https".equalsIgnoreCase(uri.getScheme())
+                        && "appassets.androidplatform.net".equalsIgnoreCase(uri.getHost())) return false;
+                // Keep the trusted app WebView local; open external links in the system browser.
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                } catch (Exception ignored) {
+                }
                 return true;
             }
         });
@@ -99,7 +106,7 @@ public class MainActivity extends Activity {
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("*/*");
                 intent.putExtra(Intent.EXTRA_MIME_TYPES,
-                    new String[]{"application/json", "text/plain", "application/octet-stream"});
+                        new String[]{"application/json", "text/plain", "application/octet-stream"});
                 try {
                     startActivityForResult(intent, REQUEST_IMPORT);
                     return true;
@@ -114,31 +121,43 @@ public class MainActivity extends Activity {
         try {
             String html = readAll(getAssets().open("atlas.html"));
             String notes = loadNotes();
+            String preferences = loadSettings();
+
+            // Inject saved data/preferences and the native bridge before the application script.
+            // Escaping angle brackets prevents user content containing </script> from ending the tag.
+            StringBuilder bootstrap = new StringBuilder();
             if (notes != null) {
-                // Avoid HTML parser interpretation of a literal </script> inside user data.
-                String safeData = notes.replace("<", "\\u003c").replace(">", "\\u003e");
-                String marker = "</script><script>/* Embedded Atlas";
-                if (!html.contains(marker)) {
-                    throw new IOException("HTML bootstrap marker missing");
-                }
-                html = html.replace(marker,
-                    "</script><script>window.ATLAS_NATIVE_DATA=" + safeData + ";</script><script>/* Embedded Atlas");
+                bootstrap.append("window.ATLAS_NATIVE_DATA=")
+                        .append(escapeForScript(notes)).append(";");
             }
+            if (preferences != null) {
+                bootstrap.append("window.ATLAS_NATIVE_PREFS=")
+                        .append(escapeForScript(preferences)).append(";");
+            }
+            bootstrap.append(
+                    "window.__atlasExportPending={};" +
+                    "window.__atlasExportDone=function(id,r){const f=window.__atlasExportPending[id];if(f){delete window.__atlasExportPending[id];f(r);}};" +
+                    "window.pywebview={api:{" +
+                    "save_data:function(j){return Promise.resolve(JSON.parse(AtlasAndroid.saveData(j)));}," +
+                    "save_settings:function(j){return Promise.resolve(JSON.parse(AtlasAndroid.saveSettings(j)));}," +
+                    "export_data:function(j){return new Promise(function(resolve){const id='x'+Date.now()+'_'+Math.random();window.__atlasExportPending[id]=resolve;AtlasAndroid.requestExport(j,id);});}" +
+                    "}}};"
+            );
+
             String marker = "</script><script>/* Embedded Atlas";
-            String bridge = "</script><script>" +
-                "window.__atlasExportPending={};" +
-                "window.__atlasExportDone=function(id,r){const f=window.__atlasExportPending[id];if(f){delete window.__atlasExportPending[id];f(r);}};" +
-                "window.pywebview={api:{" +
-                "save_data:function(j){return Promise.resolve(JSON.parse(AtlasAndroid.saveData(j)));}," +
-                "export_data:function(j){return new Promise(function(resolve){const id='x'+Date.now()+'_'+Math.random();window.__atlasExportPending[id]=resolve;AtlasAndroid.requestExport(j,id);});}" +
-                "}}};" +
-                "</script><script>/* Embedded Atlas";
-            if (!html.contains(marker)) throw new IOException("HTML bridge marker missing");
-            html = html.replace(marker, bridge);
+            if (!html.contains(marker)) {
+                throw new IOException("HTML bootstrap marker missing");
+            }
+            html = html.replace(marker,
+                    "</script><script>" + bootstrap + "</script><script>/* Embedded Atlas");
             webView.loadDataWithBaseURL(BASE_URL, html, "text/html", "UTF-8", null);
         } catch (IOException e) {
             Toast.makeText(this, "知识库加载失败: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    private static String escapeForScript(String json) {
+        return json.replace("<", "\\u003c").replace(">", "\\u003e");
     }
 
     private static String readAll(InputStream input) throws IOException {
@@ -155,49 +174,110 @@ public class MainActivity extends Activity {
             JSONObject obj = new JSONObject(s);
             JSONArray modules = obj.optJSONArray("modules");
             return modules != null;
-        } catch (JSONException e) { return false; }
+        } catch (JSONException e) {
+            return false;
+        }
+    }
+
+    private static boolean validSettings(String s) {
+        try {
+            String theme = new JSONObject(s).optString("theme", "");
+            return "light".equals(theme) || "dark".equals(theme) || "system".equals(theme);
+        } catch (JSONException e) {
+            return false;
+        }
     }
 
     private String loadNotes() {
+        // Existing on-device data always wins. The bundled JSON is only a first-install default.
         for (File file : new File[]{notesFile, previousFile}) {
             try {
                 String s = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
                 if (validNotes(s)) return s;
-            } catch (IOException ignored) { }
+            } catch (IOException ignored) {
+            }
+        }
+        try (InputStream bundled = getAssets().open("notes.json")) {
+            String s = readAll(bundled);
+            if (validNotes(s)) return s;
+        } catch (IOException ignored) {
         }
         return null;
     }
 
+    private String loadSettings() {
+        for (File file : new File[]{settingsFile, settingsPreviousFile}) {
+            try {
+                String s = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+                if (validSettings(s)) return s;
+            } catch (IOException ignored) {
+            }
+        }
+        return null;
+    }
+
+    private static void writeAtomically(File file, String content) throws IOException {
+        AtomicFile target = new AtomicFile(file);
+        FileOutputStream out = target.startWrite();
+        try {
+            out.write(content.getBytes(StandardCharsets.UTF_8));
+            out.flush();
+            out.getFD().sync();
+            target.finishWrite(out);
+        } catch (IOException e) {
+            target.failWrite(out);
+            throw e;
+        }
+    }
+
+    private static String failureJson(String message) {
+        JSONObject failure = new JSONObject();
+        try {
+            failure.put("ok", false);
+            failure.put("error", message);
+        } catch (JSONException ignored) {
+        }
+        return failure.toString();
+    }
+
     private final class AtlasBridge {
-        @JavascriptInterface public String saveData(String json) {
+        @JavascriptInterface
+        public String saveData(String json) {
             if (!validNotes(json)) return "{\"ok\":false,\"error\":\"Invalid JSON schema\"}";
             try {
                 synchronized (MainActivity.this) {
                     if (notesFile.isFile()) {
                         String old = new String(Files.readAllBytes(notesFile.toPath()), StandardCharsets.UTF_8);
-                        if (validNotes(old)) Files.copy(notesFile.toPath(), previousFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        if (validNotes(old)) {
+                            Files.copy(notesFile.toPath(), previousFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                        }
                     }
-                    AtomicFile target = new AtomicFile(notesFile);
-                    FileOutputStream out = target.startWrite();
-                    try {
-                        out.write(json.getBytes(StandardCharsets.UTF_8));
-                        out.flush();
-                        out.getFD().sync();
-                        target.finishWrite(out);
-                    } catch (Exception e) {
-                        target.failWrite(out);
-                        throw e;
-                    }
+                    writeAtomically(notesFile, json);
                 }
                 return "{\"ok\":true}";
             } catch (Exception e) {
-                JSONObject failure = new JSONObject();
-                try { failure.put("ok", false); failure.put("error", e.toString()); } catch (JSONException ignored) { }
-                return failure.toString();
+                return failureJson(e.toString());
             }
         }
 
-        @JavascriptInterface public void requestExport(String json, String requestId) {
+        @JavascriptInterface
+        public String saveSettings(String json) {
+            if (!validSettings(json)) return "{\"ok\":false,\"error\":\"Invalid settings schema\"}";
+            try {
+                synchronized (MainActivity.this) {
+                    if (settingsFile.isFile()) {
+                        Files.copy(settingsFile.toPath(), settingsPreviousFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    writeAtomically(settingsFile, json);
+                }
+                return "{\"ok\":true}";
+            } catch (Exception e) {
+                return failureJson(e.toString());
+            }
+        }
+
+        @JavascriptInterface
+        public void requestExport(String json, String requestId) {
             if (!validNotes(json)) {
                 respondExport(requestId, "{\"ok\":false,\"error\":\"Invalid JSON schema\"}");
                 return;
@@ -209,13 +289,15 @@ public class MainActivity extends Activity {
                 }
                 pendingExportPayload = json;
                 pendingExportToken = requestId;
-                String defaultName = "EmbeddedAtlas-" + new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date()) + ".json";
+                String defaultName = "EmbeddedAtlas-" +
+                        new SimpleDateFormat("yyyyMMdd-HHmmss", Locale.US).format(new Date()) + ".json";
                 Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/json");
                 intent.putExtra(Intent.EXTRA_TITLE, defaultName);
-                try { startActivityForResult(intent, REQUEST_EXPORT); }
-                catch (ActivityNotFoundException ex) {
+                try {
+                    startActivityForResult(intent, REQUEST_EXPORT);
+                } catch (ActivityNotFoundException ex) {
                     pendingExportPayload = null;
                     pendingExportToken = null;
                     respondExport(requestId, "{\"ok\":false,\"error\":\"No file picker\"}");
@@ -227,17 +309,21 @@ public class MainActivity extends Activity {
     private void respondExport(String token, String resultJson) {
         runOnUiThread(() -> {
             if (webView == null) return;
-            webView.evaluateJavascript("window.__atlasExportDone(" + JSONObject.quote(token) + "," + resultJson + ");", null);
+            webView.evaluateJavascript(
+                    "window.__atlasExportDone(" + JSONObject.quote(token) + "," + resultJson + ");",
+                    null
+            );
         });
     }
 
-    @Override @SuppressWarnings("deprecation")
+    @Override
+    @SuppressWarnings("deprecation")
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMPORT) {
             if (uploadCallback != null) {
                 Uri[] uris = resultCode == RESULT_OK && data != null && data.getData() != null
-                    ? new Uri[]{data.getData()} : null;
+                        ? new Uri[]{data.getData()} : null;
                 uploadCallback.onReceiveValue(uris);
                 uploadCallback = null;
             }
@@ -257,19 +343,19 @@ public class MainActivity extends Activity {
                 stream.flush();
                 respondExport(token, "{\"ok\":true,\"path\":\"所选文件夹\"}");
             } catch (IOException ex) {
-                JSONObject error = new JSONObject();
-                try { error.put("ok", false); error.put("error", ex.toString()); } catch (JSONException ignored) { }
-                respondExport(token, error.toString());
+                respondExport(token, failureJson(ex.toString()));
             }
         }
     }
 
-    @Override public void onBackPressed() {
+    @Override
+    public void onBackPressed() {
         if (webView != null && webView.canGoBack()) webView.goBack();
         else super.onBackPressed();
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         if (webView != null) {
             webView.removeJavascriptInterface("AtlasAndroid");
             webView.destroy();

@@ -3,7 +3,7 @@ name: Build Embedded Atlas APK
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, 'update/**']
 
 jobs:
   build:
@@ -34,6 +34,6 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: EmbeddedAtlas-APK
+          name: EmbeddedAtlas-APK-v1.1.0
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
